@@ -18,6 +18,7 @@ import org.patchca.word.RandomWordFactory;
 
 import blade.annotation.Path;
 import blade.annotation.Route;
+import blade.fm.Constant;
 import blade.servlet.Request;
 import blade.servlet.Response;
 import blade.servlet.Session;
@@ -81,8 +82,8 @@ public class VerifyCodeRoute {
 		Session session = request.session();
 		setResponseHeaders(response.servletResponse());
 		String token = EncoderHelper.getChallangeAndWriteImage(cs, "png", response.servletResponse().getOutputStream());
-		session.attribute("captchaToken", token);
-		System.out.println("当前的SessionID=" + session.id() + "，验证码=" + token);
+		session.attribute(Constant.CAPTCHA_TOKEN, token);
+//		System.out.println("当前的SessionID=" + session.id() + "，验证码=" + token);
 	}
 	
 	protected void setResponseHeaders(HttpServletResponse response) {

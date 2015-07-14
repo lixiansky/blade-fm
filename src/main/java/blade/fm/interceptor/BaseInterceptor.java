@@ -5,6 +5,8 @@ import java.util.Map;
 import blade.annotation.After;
 import blade.annotation.Before;
 import blade.annotation.Interceptor;
+import blade.fm.Constant;
+import blade.fm.model.User;
 import blade.fm.service.SettingService;
 import blade.fm.service.impl.SettingServiceImpl;
 import blade.kit.timw.TimwManager;
@@ -14,7 +16,6 @@ import blade.servlet.Response;
 
 /**
  * 全局拦截器
- * @authoRequest request, Response responseex
  */
 @Interceptor
 public class BaseInterceptor {
@@ -42,13 +43,13 @@ public class BaseInterceptor {
 		request.attribute("setting", setting);
 		request.attribute("cdn", request.contextPath());
 		
-//		User login_user = request.session().attribute(Constant.LOGIN_SESSION);
+		User login_user = request.session().attribute(Constant.LOGIN_SESSION);
 		
 		// 未登录
-//		if(null == login_user && request.uri().indexOf("/admin") != -1){
-//			response.redirect(request.contextPath() + WebConst.ADMIN_LOGIN);
-//			return;
-//		}
+		if(null == login_user && request.uri().indexOf("/admin") != -1){
+			response.redirect(Constant.ADMIN_LOGIN);
+			return;
+		}
 	}
 	
 	@After("/*")

@@ -25,8 +25,16 @@ public class IndexRoute extends BaseRoute {
 	/**
 	 * 后台首页
 	 */
-	@Route
-	public String index(Request request, Response response) {
+	@Route("/")
+	public String home(Request request) {
+		return index(request);
+	}
+	
+	/**
+	 * 后台首页
+	 */
+	@Route("index")
+	public String index(Request request) {
 		return "index";
 	}
 

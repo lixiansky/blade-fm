@@ -41,14 +41,6 @@ public class Music extends Model {
 		return this.id;
 	}
 	
-	public void setUid(Integer uid) {
-		this.uid = uid;
-	}
-	
-	public Integer getUid() {
-		return this.uid;
-	}
-	
 	public void setSinger(String singer) {
 		this.singer = singer;
 	}
@@ -159,6 +151,14 @@ public class Music extends Model {
 
 	public void setLrc(String lrc) {
 		this.lrc = lrc;
+	}
+
+	public Integer getUid() {
+		return uid;
+	}
+
+	public void setUid(Integer uid) {
+		this.uid = uid;
 	}
 
 }

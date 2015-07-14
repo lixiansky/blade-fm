@@ -25,7 +25,7 @@ import blade.servlet.Response;
  * @date:2014年10月11日
  * @version:1.0
  */
-@Path
+@Path("/admin/music")
 public class MusicRoute extends BaseRoute {
 
 	@Inject
@@ -38,20 +38,20 @@ public class MusicRoute extends BaseRoute {
 	/**
 	 * 音乐列表
 	 */
-	@Route("/admin/music/index")
+	@Route("/index")
 	public String index(Request request) {
 		String singer = request.query("singer");
 		String song = request.query("song");
 		Page<Map<String, Object>> musicPage = musicService.getPageMapList(uid, singer, song, null, null, 1, page,
 				pageSize, "id desc");
 		request.attribute("pageMap", musicPage);
-		return "/admin/music";
+		return "music";
 	}
 
 	/**
 	 * 显示音乐
 	 */
-	@Route("/admin/music/:id")
+	@Route("/:id")
 	public String edit_music(Request request) {
 		Integer mid = request.pathParamToInt("id");
 		// 编辑
@@ -69,7 +69,7 @@ public class MusicRoute extends BaseRoute {
 	/**
 	 * 保存音乐
 	 */
-	@Route("/admin/music/save")
+	@Route("/save")
 	public String save(Request request, Response response) {
 		String step = request.query("step");
 		if (StringUtils.isNoneBlank(step)) {
@@ -106,7 +106,7 @@ public class MusicRoute extends BaseRoute {
 	/**
 	 * 删除音乐
 	 */
-	@Route("/admin/music/del")
+	@Route("/del")
 	public void del(Request request, Response response) {
 		Integer mid = request.queryToInt("mid");
 		boolean flag = false;

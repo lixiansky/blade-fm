@@ -136,10 +136,14 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User login(String email, String password) {
-		String pwd = EncrypUtil.md5(email + password);
-		User user = this.find(null, email, 1, 1);
-		if (null != user && user.getPassword().equals(pwd)) {
-			return user;
+		if(StringKit.isNotBlank(email) && StringKit.isNotBlank(password)){
+			String pwd = EncrypUtil.md5(email + password);
+			
+			return model.select()
+					.where("email", email)
+					.where("password", pwd)
+					.where("is_admin", 1)
+					.where("status", 1).fetchOne();
 		}
 		return null;
 	}

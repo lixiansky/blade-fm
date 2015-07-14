@@ -66,6 +66,7 @@
 					<div class="col-md-10">
 						<div class="input-group form-btn">
 							<button type="submit" class="btn btn-primary"><i class="icon-ok"></i>帐号登录</button>
+							<button type="button" class="btn btn-success" onclick="window.location.href='${base}/qq_login'"><i class="icon-qq"></i>腾讯QQ登录</button>
 						</div>
 					</div>
 				</div>
@@ -75,4 +76,4 @@
 </div>
 	
 <script type="text/javascript" src="${cdn}/assets/js/jq/jquery-2.0.min.js"></script>
-<% include("/common/footer.html", {jsList:['signin.js']}){} %>
+<% include("/common/footer.html", {jsList:['admin/login.js']}){} %>

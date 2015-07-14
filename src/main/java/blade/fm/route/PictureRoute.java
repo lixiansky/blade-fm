@@ -1,4 +1,4 @@
-package blade.fm.route.front;
+package blade.fm.route;
 
 import java.util.Map;
 

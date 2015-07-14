@@ -12,7 +12,7 @@
 	}).on("click", "btn.btn-primary", function(e){
 	    $(e.delegateTarget).trigger("validate");
 	}).bind('valid.form', function(form){
-		var url = $unique.base + '/admin/login';
+		var url = $unique.base + '/login';
 		var param = $(this).serializeArray();
 		$.post(url, param, function(data) {
 			if(data){

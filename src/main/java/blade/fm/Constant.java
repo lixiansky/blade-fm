@@ -16,9 +16,9 @@ public class Constant {
 	public static final String LOGIN_SESSION = "login_session";
 	
 	/**
-	 * 锁定界面session标识
+	 * 验证码session标识
 	 */
-	public static final String LOCK_SESSION = "lock_session";
+	public static final String CAPTCHA_TOKEN = "captcha_token";
 	
 	/**
 	 * 是否是debug模式

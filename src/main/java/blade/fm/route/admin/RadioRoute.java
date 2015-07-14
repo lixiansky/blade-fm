@@ -23,7 +23,7 @@ import blade.servlet.Response;
  * @date:2014年8月19日
  * @version:1.0
  */
-@Path
+@Path("/admin/radio")
 public class RadioRoute extends BaseRoute {
 
 	@Inject
@@ -34,7 +34,7 @@ public class RadioRoute extends BaseRoute {
 	/**
 	 * 后台首页
 	 */
-	@Route("/admin/radio/index")
+	@Route("/index")
 	public String index(Request request) {
 		String title = request.query("title");
 		Integer sid = request.queryToInt("sid");
@@ -48,7 +48,7 @@ public class RadioRoute extends BaseRoute {
 	/**
 	 * 编辑电台
 	 */
-	@Route("/admin/radio/:id")
+	@Route("/:id")
 	public String edit_radio(Request request) {
 		Integer id = request.pathParamToInt("id");
 		// 编辑
@@ -64,7 +64,7 @@ public class RadioRoute extends BaseRoute {
 	/**
 	 * 保存音乐
 	 */
-	@Route("/admin/radio/save")
+	@Route("/save")
 	public String save(Request request, Response response) {
 		String step = request.query("step");
 		if (StringUtils.isNoneBlank(step)) {
@@ -92,7 +92,7 @@ public class RadioRoute extends BaseRoute {
 	/**
 	 * 删除电台
 	 */
-	@Route("/admin/radio/del")
+	@Route("/del")
 	public void del(Request request, Response response) {
 		Integer id = request.queryToInt("id");
 		boolean flag = false;

@@ -1,4 +1,4 @@
-package blade.fm.route.front;
+package blade.fm.route;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -7,11 +7,9 @@ import blade.annotation.Path;
 import blade.annotation.Route;
 import blade.fm.Constant;
 import blade.fm.model.User;
-import blade.fm.route.BaseRoute;
 import blade.fm.service.OpenService;
 import blade.fm.service.UserService;
 import blade.render.ModelAndView;
-import blade.route.HttpMethod;
 import blade.servlet.Request;
 import blade.servlet.Response;
 
@@ -23,7 +21,7 @@ import blade.servlet.Response;
  */
 @Path
 public class IndexRoute extends BaseRoute {
-
+	
 	@Inject
 	private UserService userService;
 	@Inject
@@ -53,33 +51,34 @@ public class IndexRoute extends BaseRoute {
 	/**
 	 * 用户登录
 	 */
-	@Route(value = "/login", method = HttpMethod.POST)
-	public ModelAndView login(Request request, Response response){
+	@Route(value = "/login")
+	public String login(Request request, Response response){
 		
 		String step = request.query("step");
-		ModelAndView modelAndView = new ModelAndView("login");
 		
 		if (null != step && step.equals("login")) {
+			
 			String login_name = request.query("login_name");
 			String verify_code = request.query("verify_code");
 			String pass_word = request.query("pass_word");
-			String currentcode = "";
+			String currentcode = request.session().attribute(Constant.CAPTCHA_TOKEN);
 			
 			if(StringUtils.isNotBlank(verify_code) && verify_code.equalsIgnoreCase(currentcode)){
 				User user = userService.login(login_name, pass_word);
 				//登录成功
 				if (null != user) {
 					request.session().attribute(Constant.LOGIN_SESSION, user);
-					response.redirect("/admin/index");
+					response.text(Constant.MSG_SUCCESS);
 				} else {
-					modelAndView.add(this.ERROR, "用户名或者密码错误！");
+					response.text(Constant.MSG_ERROR);
 				}
+				return null;
 			} else{
-				modelAndView.add(this.ERROR, "用户名或者密码错误！");
+				response.text(Constant.MSG_VERIFY_ERROR);
+				return null;
 			}
 		}
-		
-		return modelAndView;
+		return "login";
 	}
 }
 
