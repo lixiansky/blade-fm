@@ -6,7 +6,6 @@ import java.util.Map;
 import blade.annotation.Inject;
 import blade.annotation.Path;
 import blade.annotation.Route;
-import blade.fm.route.BaseRoute;
 import blade.fm.service.FocusService;
 import blade.fm.service.MusicService;
 import blade.fm.service.OpenService;
@@ -34,6 +33,9 @@ public class SpecialRoute extends BaseRoute {
 	
 	@Route("index")
 	public String index(Request request){
+		
+		Integer page = request.queryToInt("page");
+		
 		//焦点图
 		List<Map<String, Object>> focusList = focusService.getList(1, null, 1, "create_time desc");
 		//精选电台

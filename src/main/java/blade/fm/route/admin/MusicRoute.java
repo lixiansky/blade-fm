@@ -5,8 +5,6 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.alibaba.fastjson.JSONObject;
-
 import blade.annotation.Inject;
 import blade.annotation.Path;
 import blade.annotation.Route;
@@ -18,6 +16,8 @@ import blade.fm.service.SpecialService;
 import blade.plugin.sql2o.Page;
 import blade.servlet.Request;
 import blade.servlet.Response;
+
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * 音乐管理
@@ -38,10 +38,21 @@ public class MusicRoute extends BaseRoute {
 	/**
 	 * 音乐列表
 	 */
+	@Route("/")
+	public String home(Request request) {
+		return index(request);
+	}
+	
+	/**
+	 * 音乐列表
+	 */
 	@Route("/index")
 	public String index(Request request) {
 		String singer = request.query("singer");
 		String song = request.query("song");
+		Integer uid = getUid(request);
+		Integer page = request.queryToInt("page");
+		
 		Page<Map<String, Object>> musicPage = musicService.getPageMapList(uid, singer, song, null, null, 1, page,
 				pageSize, "id desc");
 		request.attribute("pageMap", musicPage);
@@ -84,7 +95,8 @@ public class MusicRoute extends BaseRoute {
 			String cids = request.query("cids");
 
 			boolean flag = false;
-			uid = 1;
+			Integer uid = getUid(request);
+			
 			if (null != mid) {
 				flag = musicService.update(mid, singer, song, song_path, cover_path, introduce, cids, lrc, null, sid) > 0;
 			} else {

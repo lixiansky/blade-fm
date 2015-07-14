@@ -4,8 +4,6 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.alibaba.fastjson.JSONObject;
-
 import blade.annotation.Inject;
 import blade.annotation.Path;
 import blade.annotation.Route;
@@ -14,6 +12,8 @@ import blade.fm.service.SpecialService;
 import blade.plugin.sql2o.Page;
 import blade.servlet.Request;
 import blade.servlet.Response;
+
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * 用户后台
@@ -32,6 +32,7 @@ public class SpecialRoute extends BaseRoute {
 	 */
 	@Route("/admin/special/index")
 	public String index(Request request) {
+		Integer page = request.queryToInt("page");
 		Page<Map<String, Object>> specialPage = specialService.getPageMapList(null, null, null, null, null, page,
 				pageSize, "last_time desc");
 		request.attribute("specialPage", specialPage);
@@ -52,7 +53,7 @@ public class SpecialRoute extends BaseRoute {
 			String cover = request.query("cover");
 			Integer status = request.queryToInt("status");
 			boolean flag = false;
-			uid = 1;
+			Integer uid = getUid(request);
 			if (null != id) {
 				flag = specialService.update(id, uid, title, introduce, cover, is_fine, status) > 0;
 			} else {

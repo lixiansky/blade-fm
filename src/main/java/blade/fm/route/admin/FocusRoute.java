@@ -32,6 +32,7 @@ public class FocusRoute extends BaseRoute {
 	 */
 	@Route("/admin/focus")
 	public String index(Request request) {
+		Integer page = request.queryToInt("page");
 		Page<Map<String, Object>> focusPage = focusService.getPageMapList(null, null, null, page, pageSize, "create_time desc");
 		request.attribute("focusPage", focusPage);
 		return "/admin/focus";
@@ -66,7 +67,6 @@ public class FocusRoute extends BaseRoute {
 			String pic = request.query("pic");
 			Integer status = request.queryToInt("status");
 			boolean flag = false;
-			uid = 1;
 			if (null != id) {
 				flag = focusService.update(id, title, introduce, pic, type, status) > 0;
 			} else {

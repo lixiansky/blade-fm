@@ -39,6 +39,8 @@ public class RadioRoute extends BaseRoute {
 		String title = request.query("title");
 		Integer sid = request.queryToInt("sid");
 		Integer status = request.queryToInt("status");
+		Integer uid = getUid(request);
+		Integer page = request.queryToInt("page");
 		Page<Map<String, Object>> radioPage = radioService.getPageMapList(uid, title, sid, status, page, pageSize,
 				"id desc");
 		request.attribute("pageMap", radioPage);
@@ -73,6 +75,8 @@ public class RadioRoute extends BaseRoute {
 			Integer sid = request.queryToInt("sid");
 			String url = request.query("url");
 
+			Integer uid = getUid(request);
+			
 			boolean flag = false;
 			if (null != id) {
 				flag = radioService.update(id, title, sid, url);

@@ -30,6 +30,9 @@ public class PictureRoute extends BaseRoute {
 	@Route
 	public String index(Request request, Response response){
 		String mode = request.query("mode");
+		Integer uid = getUid(request);
+		Integer page = request.queryToInt("page");
+		
 		Page<Map<String, Object>> picPage = pictureService.getPageMapList(uid, null, 1, page, pageSize, "create_time desc");
 		if(StringUtils.isNotBlank(mode) && mode.equals("ajax")){
 			response.json(JSON.toJSONString(picPage));

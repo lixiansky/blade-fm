@@ -28,10 +28,17 @@ public class MusicRoute extends BaseRoute {
 	@Inject
 	private MusicService musicService;
 	
+	@Route("/")
+	public String home(Request request, Response response){
+		return index(request, response); 
+	}
+	
 	@Route("index")
 	public String index(Request request, Response response){
 		String singer = request.query("singer");
 		String song = request.query("song");
+		Integer uid = getUid(request);
+		Integer page = request.queryToInt("page");
 		Page<Map<String, Object>> pageData = musicService.getPageMapList(uid, singer, song, null, null, 1, page, 9,
 				"create_time desc");
 		request.attribute("pageEntity", pageData);
@@ -42,7 +49,8 @@ public class MusicRoute extends BaseRoute {
 	 * 最新10首歌
 	 */
 	@Route("new_music")
-	public void new_music(Response response){
+	public void new_music(Request request, Response response){
+		Integer page = request.queryToInt("page");
 		Page<Map<String, Object>> top10List = musicService.getPageMapList(null, null, null, null, null, 1, page, 9, "create_time desc");
 		response.json(JSON.toJSONString(top10List));
 	}
@@ -51,7 +59,8 @@ public class MusicRoute extends BaseRoute {
 	 * 最热门的歌
 	 */
 	@Route("hot")
-	public void hot(Response response){
+	public void hot(Request request, Response response){
+		Integer page = request.queryToInt("page");
 		Page<Map<String, Object>> hotList = musicService.getPageMapList(null, null, null, null, null, 1, page, 9, "like_count desc");
 		response.json(JSON.toJSONString(hotList));
 	}

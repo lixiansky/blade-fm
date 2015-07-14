@@ -1,10 +1,11 @@
 package blade.fm.route;
 
+import blade.fm.Constant;
+import blade.fm.model.User;
 import blade.render.ModelAndView;
+import blade.servlet.Request;
 
 public class BaseRoute {
-	
-	protected Integer page = 1;
 	
 	protected Integer pageSize = 10;
 	
@@ -30,5 +31,11 @@ public class BaseRoute {
 		return new ModelAndView(view);
 	}
 	
-	protected Integer uid = 1;
+	public Integer getUid(Request request){
+		User user = request.session().attribute(Constant.LOGIN_SESSION);
+		if(null != user){
+			return user.getUid();
+		}
+		return 1;
+	}
 }

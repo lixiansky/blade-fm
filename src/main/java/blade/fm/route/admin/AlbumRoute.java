@@ -34,6 +34,9 @@ public class AlbumRoute extends BaseRoute {
 	public String index(Request request, Response response) {
 		String title = request.query("title");
 		Integer status = request.queryToInt("status");
+		Integer uid = getUid(request);
+		Integer page = request.queryToInt("page");
+		
 		Page<Map<String, Object>> picPage = pictureService.getPageMapList(uid, title, status, page, pageSize, "id desc");
 		request.attribute("picPage", picPage);
 		return "/admin/picture";
@@ -54,6 +57,9 @@ public class AlbumRoute extends BaseRoute {
 			String pics = request.query("pics");
 			String cover = request.query("cover");
 			Integer status = request.queryToInt("status");
+			
+			Integer uid = getUid(request);
+			
 			boolean flag = false;
 			if(null != id){
 				flag = pictureService.update(id, title, introduce, cover, pics, status);

@@ -30,6 +30,7 @@ public class UserRoute extends BaseRoute {
 	 */
 	@Route("/admin/user/index")
 	public String index(Request request) {
+		Integer page = request.queryToInt("page");
 		Page<Map<String, Object>> userPage = userService.getPageMapList(null, null, null, page, pageSize, "uid desc");
 		request.attribute("userPage", userPage);
 		return "/admin/user";
