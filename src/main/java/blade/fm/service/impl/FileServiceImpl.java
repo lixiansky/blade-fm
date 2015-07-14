@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import blade.fm.api.QiniuApi;
+import blade.fm.QiniuApi;
 import blade.fm.api.QiniuConst;
 import blade.fm.service.FileService;
 import blade.fm.util.HttpDownload;
@@ -232,23 +232,7 @@ public class FileServiceImpl implements FileService {
 			}.start();
 		}
 	}
-
-	@Override
-	public void download(final String key, String savePath, String fileName) {
-		try {
-			Mac mac = new Mac(QiniuConst.ACCESS_KEY, QiniuConst.SECRET_KEY);
-			String baseUrl = URLUtils.makeBaseUrl(QiniuConst.DOMAIN, key);
-			GetPolicy getPolicy = new GetPolicy();
-			String downloadUrl = getPolicy.makeRequest(baseUrl, mac);
-			HttpDownload.download(downloadUrl, savePath, null);
-		} catch (EncoderException e) {
-			e.printStackTrace();
-		} catch (AuthException e) {
-			e.printStackTrace();
-		}
-
-	}
-
+	
 	@Override
 	public void clean(Integer type, String key) {
 		if (null != type && StringUtils.isNoneBlank(key)) {

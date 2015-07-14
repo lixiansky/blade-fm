@@ -2,7 +2,7 @@ package blade.fm.service.impl;
 
 import java.io.UnsupportedEncodingException;
 
-import blade.fm.cloud.model.Active;
+import blade.fm.model.Active;
 import blade.fm.service.ActiveService;
 import blade.fm.service.UserService;
 import blade.fm.util.Base64;

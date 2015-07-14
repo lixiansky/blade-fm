@@ -4,8 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import blade.fm.api.QiniuApi;
-import blade.fm.cloud.model.Album;
+import blade.fm.QiniuApi;
+import blade.fm.model.Album;
 import blade.fm.service.AlbumService;
 import blade.fm.service.FileService;
 import blade.fm.util.BeanUtil;

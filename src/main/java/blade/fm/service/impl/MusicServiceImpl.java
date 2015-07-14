@@ -4,10 +4,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import blade.fm.api.QiniuApi;
-import blade.fm.cloud.model.Mcat;
-import blade.fm.cloud.model.Music;
-import blade.fm.cloud.model.User;
+import blade.fm.QiniuApi;
+import blade.fm.model.Mcat;
+import blade.fm.model.Music;
+import blade.fm.model.User;
 import blade.fm.service.FileService;
 import blade.fm.service.McatService;
 import blade.fm.service.MusicService;

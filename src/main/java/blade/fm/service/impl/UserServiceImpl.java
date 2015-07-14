@@ -3,8 +3,8 @@ package blade.fm.service.impl;
 import java.util.List;
 import java.util.Map;
 
-import blade.fm.cloud.model.Open;
-import blade.fm.cloud.model.User;
+import blade.fm.model.Open;
+import blade.fm.model.User;
 import blade.fm.service.ActiveService;
 import blade.fm.service.OpenService;
 import blade.fm.service.UserService;

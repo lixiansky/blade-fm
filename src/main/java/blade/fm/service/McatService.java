@@ -2,7 +2,7 @@ package blade.fm.service;
 
 import java.util.List;
 
-import blade.fm.cloud.model.Mcat;
+import blade.fm.model.Mcat;
 
 
 

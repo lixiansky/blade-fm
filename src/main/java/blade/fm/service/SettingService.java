@@ -2,7 +2,7 @@ package blade.fm.service;
 
 import java.util.Map;
 
-import blade.fm.cloud.model.Setting;
+import blade.fm.model.Setting;
 
 /**
  * 配置接口

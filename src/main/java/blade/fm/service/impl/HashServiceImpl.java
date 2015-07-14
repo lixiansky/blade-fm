@@ -1,6 +1,6 @@
 package blade.fm.service.impl;
 
-import blade.fm.cloud.model.Hash;
+import blade.fm.model.Hash;
 import blade.fm.service.HashService;
 
 import org.unique.common.tools.DateUtil;

@@ -3,7 +3,7 @@ package blade.fm.service;
 import java.util.List;
 import java.util.Map;
 
-import blade.fm.cloud.model.Album;
+import blade.fm.model.Album;
 import blade.plugin.sql2o.Page;
 
 /**

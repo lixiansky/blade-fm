@@ -2,7 +2,7 @@ package blade.fm.service;
 
 import java.util.List;
 
-import blade.fm.cloud.model.Post;
+import blade.fm.model.Post;
 import blade.plugin.sql2o.Page;
 
 /**

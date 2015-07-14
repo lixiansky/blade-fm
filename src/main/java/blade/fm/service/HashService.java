@@ -1,6 +1,6 @@
 package blade.fm.service;
 
-import blade.fm.cloud.model.Hash;
+import blade.fm.model.Hash;
 
 /**
  * hash值记录接口

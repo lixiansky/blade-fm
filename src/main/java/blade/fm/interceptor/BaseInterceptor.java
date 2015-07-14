@@ -2,8 +2,8 @@ package blade.fm.interceptor;
 
 import java.util.Map;
 
-import blade.fm.api.Constant;
-import blade.fm.cloud.model.User;
+import blade.fm.Constant;
+import blade.fm.model.User;
 import blade.fm.service.SettingService;
 import blade.fm.service.impl.SettingServiceImpl;
 import blade.annotation.After;

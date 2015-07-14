@@ -90,14 +90,6 @@ public interface FileService {
 	void upload(String key, String filePath);
 	
 	/**
-	 * 下载到本地
-	 * @param key
-	 * @param savePath
-	 * @param fileName
-	 */
-	void download(String key, String savePath, String fileName);
-	
-	/**
 	 * 清理无用的资源
 	 * @param type 1:完全匹配 2：以key开头
 	 * @param filterReg

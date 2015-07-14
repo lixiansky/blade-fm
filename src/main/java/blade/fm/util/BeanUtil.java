@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import blade.fm.cloud.model.Music;
+import blade.fm.model.Music;
 
 /**
  * java对象和map转换

@@ -2,7 +2,7 @@ package blade.fm.service.impl;
 
 import java.util.List;
 
-import blade.fm.cloud.model.Post;
+import blade.fm.model.Post;
 import blade.fm.service.PostService;
 
 import org.apache.log4j.Logger;

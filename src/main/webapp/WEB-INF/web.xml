@@ -3,7 +3,21 @@
  "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
-	<display-name>unique-cloud</display-name>
+	<display-name>blade-fm</display-name>
+	
+	<filter>
+		<filter-name>BladeFilter</filter-name>
+		<filter-class>blade.BladeFilter</filter-class>
+		<init-param>
+			<param-name>applicationClass</param-name>
+			<param-value>blade.fm.App</param-value>
+		</init-param>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>BladeFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 	
 	<session-config>
 		<session-timeout>30</session-timeout>

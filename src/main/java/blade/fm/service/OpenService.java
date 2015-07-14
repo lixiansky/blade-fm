@@ -1,6 +1,6 @@
 package blade.fm.service;
 
-import blade.fm.cloud.model.Open;
+import blade.fm.model.Open;
 
 /**
  * 第三方绑定接口

@@ -3,9 +3,9 @@ package blade.fm.service.impl;
 import java.util.List;
 import java.util.Map;
 
-import blade.fm.api.QiniuApi;
-import blade.fm.cloud.model.Special;
-import blade.fm.cloud.model.User;
+import blade.fm.QiniuApi;
+import blade.fm.model.Special;
+import blade.fm.model.User;
 import blade.fm.service.FileService;
 import blade.fm.service.MusicService;
 import blade.fm.service.RadioService;

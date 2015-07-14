@@ -1,7 +1,7 @@
 package blade.fm.service.impl;
 
-import blade.fm.cloud.model.Open;
-import blade.fm.cloud.model.User;
+import blade.fm.model.Open;
+import blade.fm.model.User;
 import blade.fm.service.OpenService;
 
 import org.apache.log4j.Logger;
