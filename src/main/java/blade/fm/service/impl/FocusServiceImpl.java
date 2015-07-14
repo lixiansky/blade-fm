@@ -4,17 +4,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
+import blade.annotation.Component;
+import blade.annotation.Inject;
+import blade.fm.Constant;
 import blade.fm.QiniuApi;
 import blade.fm.model.Focus;
 import blade.fm.service.FileService;
 import blade.fm.service.FocusService;
 import blade.fm.util.BeanUtil;
-import blade.fm.util.WebConst;
-
-import org.apache.commons.lang3.StringUtils;
-
-import blade.annotation.Component;
-import blade.annotation.Inject;
 import blade.kit.CollectionKit;
 import blade.kit.DateKit;
 import blade.kit.FileKit;
@@ -64,7 +63,7 @@ public class FocusServiceImpl implements FocusService {
 		String key = "";
 		if (StringUtils.isNotBlank(pic)) {
 			key = pic;
-			String filePath = WebConst.getWebRootPath() + pic;
+			String filePath = Constant.WEB_ROOT + "/" + pic;
 			if (!pic.startsWith("http://") && FileKit.isFile(filePath)) {
 				//上传音乐
 				fileService.upload(key, filePath);
@@ -107,7 +106,7 @@ public class FocusServiceImpl implements FocusService {
 				// 幻灯片是否修改
 				if (StringUtils.isNotBlank(pic)) {
 					pic_key = pic;
-					String filePath = WebConst.getWebRootPath() + pic;
+					String filePath = Constant.WEB_ROOT + "/" + pic;
 					if (!pic.startsWith("http://") && FileKit.isFile(filePath)) {
 						//上传封面
 						fileService.upload(pic_key, filePath);

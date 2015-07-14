@@ -1,24 +1,23 @@
 package blade.fm.service.impl;
 
+import org.apache.log4j.Logger;
+
+import blade.annotation.Component;
 import blade.fm.model.Open;
-import blade.fm.model.User;
 import blade.fm.service.OpenService;
 
-import org.apache.log4j.Logger;
-import org.unique.ioc.annotation.Service;
-import org.unique.plugin.dao.SqlBase;
-import org.unique.plugin.db.exception.UpdateException;
-
-@Service
+@Component
 public class OpenServiceImpl implements OpenService {
 	
 	private Logger logger = Logger.getLogger(OpenServiceImpl.class);
 	
+	private Open model = new Open();
+	
 	private Open find(Integer id, String email, String openid,
 			Integer type, Integer status){
-		SqlBase base = SqlBase.select("select * from t_open t");
-        base.eq("t.id", id).eq("t.email", email).eq("t.openid", openid).eq("t.type", type).eq("t.status", status);
-        return Open.db.find(base.getSQL(), base.getParams());
+		
+        return model.select().where("id", id).where("email", email).where("openid", openid)
+        .where("type", type).where("status", status).fetchOne();
 	}
 	
 	@Override
@@ -30,9 +29,11 @@ public class OpenServiceImpl implements OpenService {
 	public int save(String email, Integer type, String openid) {
 		int count = 0;
 		try {
-			count = User.db.update("insert into t_open(type, email, openid, status) "
-					+ "values(?, ?, ?, ?)", type, email, openid, 1);
-		} catch (UpdateException e) {
+			count = model.insert().param("type", type)
+					.param("email", email)
+					.param("openid", openid)
+					.param("status", 1).executeAndCommit(Integer.class);
+		} catch (Exception e) {
 			logger.warn("保存open用户失败：" + e.getMessage());
 			count = 0;
 		}

@@ -6,7 +6,7 @@ import java.util.Set;
 /**
  * 用户关注接口
  * 
- * @author rex
+ * @authoRequest request, Response responseex
  */
 public interface FollowService {
 

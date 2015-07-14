@@ -1,22 +1,26 @@
 package blade.fm.service.impl;
 
+import java.util.Date;
+
+import org.apache.commons.lang3.StringUtils;
+
+import blade.annotation.Component;
 import blade.fm.model.Hash;
 import blade.fm.service.HashService;
+import blade.kit.DateKit;
 
-import org.unique.common.tools.DateUtil;
-import org.unique.common.tools.StringUtils;
-import org.unique.ioc.annotation.Service;
-
-@Service
+@Component
 public class HashServiceImpl implements HashService {
-
+	
+	private Hash model = new Hash();
+	
 	@Override
 	public Hash get(Integer id, String hash) {
 		if (null != id) {
-			return Hash.db.findByPK(id);
+			return model.select().fetchByPk(id);
 		}
 		if (StringUtils.isNotBlank(hash)) {
-			return Hash.db.find("select * from t_hash where status = 1 and hash_code = ?", hash);
+			return model.select().where("status", 1).where("hash_code", hash).fetchOne();
 		}
 		return null;
 	}
@@ -24,8 +28,14 @@ public class HashServiceImpl implements HashService {
 	@Override
 	public boolean save(String fileName, String savePath, Long length, String hash, String key) {
 		if (StringUtils.isNotBlank(hash) && StringUtils.isNotBlank(key)) {
-			Integer dateline = DateUtil.getCurrentTime();
-			return Hash.db.insert("insert into t_hash(hash_code, file_key, file_name, save_path, length, dateline) values(?,?,?,?,?,?)", hash, key, fileName, savePath, length, dateline) > 0;
+			Integer dateline = DateKit.getUnixTimeByDate(new Date());
+			return model.insert()
+			.param("hash_code", hash)
+			.param("file_key", key)
+			.param("file_name", fileName)
+			.param("save_path", savePath)
+			.param("length", length)
+			.param("dateline", dateline).executeAndCommit(Integer.class) > 0;
 		}
 		return false;
 	}

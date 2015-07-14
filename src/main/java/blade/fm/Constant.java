@@ -52,4 +52,6 @@ public class Constant {
 	public static String QQ_TOKEN = "";
 	
 	public static Long QQ_TOKEN_EXPIREIN = 0L;
+	
+	public static String WEB_ROOT = "";
  }

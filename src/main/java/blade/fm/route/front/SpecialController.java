@@ -3,63 +3,64 @@ package blade.fm.route.front;
 import java.util.List;
 import java.util.Map;
 
-import blade.fm.route.BaseController;
+import blade.annotation.Inject;
+import blade.annotation.Path;
+import blade.annotation.Route;
+import blade.fm.route.BaseRoute;
 import blade.fm.service.FocusService;
 import blade.fm.service.MusicService;
 import blade.fm.service.OpenService;
 import blade.fm.service.RadioService;
 import blade.fm.service.SpecialService;
 import blade.fm.service.UserService;
+import blade.plugin.sql2o.Page;
+import blade.servlet.Request;
 
-import org.unique.ioc.annotation.Autowired;
-import org.unique.plugin.dao.Page;
-import org.unique.web.annotation.Action;
-import org.unique.web.annotation.Controller;
+@Path("/special")
+public class SpecialController extends BaseRoute {
 
-@Controller("/special")
-public class SpecialController extends BaseController {
-
-	@Autowired
+	@Inject
 	private UserService userService;
-	@Autowired
+	@Inject
 	private MusicService musicService;
-	@Autowired
+	@Inject
 	private SpecialService specialService;
-	@Autowired
+	@Inject
 	private OpenService openService;
-	@Autowired
+	@Inject
 	private FocusService focusService;
-	@Autowired
+	@Inject
 	private RadioService radioService;
 	
-	@Action
-	public void index(){
+	@Route("index")
+	public String index(Request request){
 		//焦点图
 		List<Map<String, Object>> focusList = focusService.getList(1, null, 1, "create_time desc");
 		//精选电台
 		Page<Map<String, Object>> finePage = specialService.getPageMapList(null, 2, 1, null, 1, page, pageSize, "last_time desc");
 		//热门电台
 		Page<Map<String, Object>> hotPage = specialService.getPageMapList(null, 2, null, null, 1, page, pageSize, "hit desc");
-		r.setAttr("focusList", focusList);
-		r.setAttr("finePage", finePage);
-		r.setAttr("hotPage", hotPage);
-		r.render("/special");
+		request.attribute("focusList", focusList);
+		request.attribute("finePage", finePage);
+		request.attribute("hotPage", hotPage);
+		return "special";
 	}
 	
 	/**
 	 * 电台列表
 	 */
-	@Action("/special/@sid")
-	public void special_content(Integer sid) {
+	@Route("/special/:sid")
+	public String special_content(Request request) {
+		Integer sid = request.pathParamToInt("sid");
 		if(null != sid){
 			// 专辑信息
 			Map<String, Object> specialMap = specialService.getMap(null, sid);
 			// 电台列表
 			List<Map<String, Object>> radioList = radioService.getList(null, null, sid, 1, "create_time desc");
-			r.setAttr("specialMap", specialMap);
-			r.setAttr("radioList", radioList);
+			request.attribute("specialMap", specialMap);
+			request.attribute("radioList", radioList);
 		}
-		r.render("/radio");
+		return "radio";
 	}
 	
 }

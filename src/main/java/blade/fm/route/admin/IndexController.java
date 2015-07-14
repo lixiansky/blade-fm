@@ -1,17 +1,19 @@
 package blade.fm.route.admin;
 
 
-import blade.fm.model.User;
-import blade.fm.route.BaseController;
-import blade.fm.service.UserService;
-import blade.fm.util.SessionUtil;
-import blade.fm.util.WebConst;
+import org.apache.commons.lang3.StringUtils;
 
-import org.unique.common.tools.StringUtils;
-import org.unique.ioc.annotation.Autowired;
-import org.unique.web.annotation.Action;
-import org.unique.web.annotation.Controller;
-import org.unique.web.core.R;
+import blade.annotation.Inject;
+import blade.annotation.Path;
+import blade.annotation.Route;
+import blade.fm.Constant;
+import blade.fm.model.User;
+import blade.fm.route.BaseRoute;
+import blade.fm.service.UserService;
+import blade.render.ModelAndView;
+import blade.route.HttpMethod;
+import blade.servlet.Request;
+import blade.servlet.Response;
 
 /**
  * 用户后台首页
@@ -19,55 +21,65 @@ import org.unique.web.core.R;
  * @date:2014年8月19日
  * @version:1.0
  */
-@Controller("/admin")
-public class IndexController extends BaseController {
+@Path("/admin")
+public class IndexController extends BaseRoute {
 
-	@Autowired
+	@Inject
 	private UserService userService;
 	
 	/**
 	 * 后台首页
 	 */
-	@Action
-	public void index(R r) {
-		r.render(this, "index");
+	@Route
+	public String index(Request request, Response response) {
+		return "index";
 	}
 
 	/**
 	 * 管理员退出
 	 */
-	@Action
-	public void logout() {
-		SessionUtil.removeLoginUser();
-		r.redirect("/");
+	@Route("logout")
+	public void logout(Request request, Response response) {
+		request.session().removeAttribute(Constant.LOGIN_SESSION);
+		response.redirect("/login");
 	}
 
+	@Route(value = "/login")
+	public ModelAndView loginPage(Request request, Response response){
+		ModelAndView modelAndView = new ModelAndView("login");
+		return modelAndView;
+	}
+	
 	/**
 	 * 用户登录
 	 */
-	@Action
-	public void login() {
-		String step = r.getPara("step");
+	@Route(value = "/login", method = HttpMethod.POST)
+	public ModelAndView login(Request request, Response response){
+		
+		String step = request.query("step");
+		ModelAndView modelAndView = new ModelAndView("login");
+		
 		if (null != step && step.equals("login")) {
-			String email = r.getPara("login_name");
-			String verify_code = r.getPara("verify_code");
-			String pass_word = r.getPara("pass_word");
-			String currentcode = SessionUtil.getVerifyCode(r.getRequest());
+			String login_name = request.query("login_name");
+			String verify_code = request.query("verify_code");
+			String pass_word = request.query("pass_word");
+			String currentcode = "";
+			
 			if(StringUtils.isNotBlank(verify_code) && verify_code.equalsIgnoreCase(currentcode)){
-				User user = userService.login(email, pass_word);
+				User user = userService.login(login_name, pass_word);
 				//登录成功
 				if (null != user) {
-					SessionUtil.setLoginUser(user);
-					r.renderText(WebConst.MSG_SUCCESS);
+					request.session().attribute(Constant.LOGIN_SESSION, user);
+					response.redirect("/admin/index");
 				} else {
-					r.renderText(WebConst.MSG_FAILURE);
+					modelAndView.add(this.ERROR, "用户名或者密码错误！");
 				}
 			} else{
-				r.renderText(WebConst.MSG_VERIFY_ERROR);
+				modelAndView.add(this.ERROR, "用户名或者密码错误！");
 			}
-			return;
 		}
-		r.render(this, "login");
+		
+		return modelAndView;
 	}
 	
 }

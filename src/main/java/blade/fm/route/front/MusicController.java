@@ -3,15 +3,18 @@ package blade.fm.route.front;
 import java.util.List;
 import java.util.Map;
 
-import blade.fm.route.BaseController;
-import blade.fm.service.MusicService;
-import blade.fm.util.WebConst;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 
-import org.unique.ioc.annotation.Autowired;
-import org.unique.plugin.dao.Page;
-import org.unique.web.annotation.Action;
-import org.unique.web.annotation.Controller;
-import org.unique.web.core.R;
+import blade.annotation.Inject;
+import blade.annotation.Path;
+import blade.annotation.Route;
+import blade.fm.Constant;
+import blade.fm.route.BaseRoute;
+import blade.fm.service.MusicService;
+import blade.plugin.sql2o.Page;
+import blade.servlet.Request;
+import blade.servlet.Response;
 
 /**
  * 前台音乐展示
@@ -19,98 +22,97 @@ import org.unique.web.core.R;
  * @date:2014年8月20日
  * @version:1.0
  */
-@Controller("/music")
-public class MusicController extends BaseController {
+@Path("/music")
+public class MusicController extends BaseRoute {
 	
-	@Autowired
+	@Inject
 	private MusicService musicService;
 	
 	public MusicController() {
 		System.out.println("aaaaaa");
 	}
 	
-	@Action
-	public void index(R r){
-		String singer = r.getPara("singer");
-		String song = r.getPara("song");
+	@Route("index")
+	public String index(Request request, Response response){
+		String singer = request.query("singer");
+		String song = request.query("song");
 		Page<Map<String, Object>> pageData = musicService.getPageMapList(uid, singer, song, null, null, 1, page, 9,
 				"create_time desc");
-		r.setAttr("pageEntity", pageData);
-		r.render("/music");
+		request.attribute("pageEntity", pageData);
+		return "music";
 	}
 	
 	/**
 	 * 最新10首歌
 	 */
-	@Action
-	public void new_music(){
+	@Route("new_music")
+	public void new_music(Response response){
 		Page<Map<String, Object>> top10List = musicService.getPageMapList(null, null, null, null, null, 1, page, 9, "create_time desc");
-		r.renderJson(top10List);
+		response.json(JSON.toJSONString(top10List));
 	}
 	
 	/**
 	 * 最热门的歌
 	 */
-	@Action
-	public void hot(){
-		Page<Map<String, Object>> top10List = musicService.getPageMapList(null, null, null, null, null, 1, page, 9, "like_count desc");
-		r.renderJson(top10List);
+	@Route("hot")
+	public void hot(Response response){
+		Page<Map<String, Object>> hotList = musicService.getPageMapList(null, null, null, null, null, 1, page, 9, "like_count desc");
+		response.json(JSON.toJSONString(hotList));
 	}
 	
 	/**
 	 * 按歌名查询
 	 */
-	@Action
-	public void search(R r){
-		String song = r.getPara("song");
-		String singer = r.getPara("singer");
+	@Route("search")
+	public void search(Request request, Response response){
+		String song = request.query("song");
+		String singer = request.query("singer");
 		Page<Map<String, Object>> top10List = musicService.getPageMapList(null, singer, song, null, null, 1, 1, 10, "like_count desc");
-		r.renderJson(top10List);
+		response.json(JSON.toJSONString(top10List));
 	}
 	
 	/**
 	 * 随机推荐
 	 */
-	@Action
-	public void random(R r){
+	@Route("random")
+	public void random(Request request, Response response){
 		List<Map<String, Object>> randomList = musicService.getRandom(10);
-		r.renderJson(randomList);
+		response.json(JSON.toJSONString(randomList));
 	}
 	
 	/**
 	 * 删除一首音乐
 	 */
-	@Action
-	public void delete_music(R r){
-		Integer mid = r.getParaToInt("mid");
+	@Route("delete_music")
+	public void delete_music(Request request, Response response){
+		Integer mid = request.queryToInt("mid");
 		int count = musicService.delete(mid);
-		if(count > 0){
-			r.renderText(WebConst.MSG_SUCCESS);
-		} else{
-			r.renderText(WebConst.MSG_FAILURE);
-		}
+		boolean flag = count > 0;
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("status", flag);
+		response.json(jsonObject.toJSONString());
 	}
 	
 	/**
 	 * 1喜欢/2收听/3下载音乐 点击+1
 	 */
-	@Action
-	public void hit(R r){
-		Integer mid = r.getParaToInt("mid");
-		Integer type = r.getParaToInt("type");
+	@Route("hit")
+	public void hit(Request request, Response response){
+		Integer mid = request.queryToInt("mid");
+		Integer type = request.queryToInt("type");
 		musicService.like(mid, type);
-		r.renderText(WebConst.MSG_SUCCESS);
+		response.text(Constant.MSG_SUCCESS);
 	}
 	
 	/**
 	 * 查询音乐信息
 	 */
-	@Action("get_music")
-	public void getMusic(R r){
-		Integer mid = r.getParaToInt("mid");
+	@Route("get_music")
+	public void getMusic(Request request, Response response){
+		Integer mid = request.queryToInt("mid");
 		if(null != mid){
 			Map<String, Object> map = musicService.getMap(null, mid);
-			r.renderJson(map);
+			response.json(JSON.toJSONString(map));
 		}
 	}
 	

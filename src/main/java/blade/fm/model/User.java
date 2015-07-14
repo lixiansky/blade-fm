@@ -71,14 +71,14 @@ public class User extends Model {
 		return this.reg_ip;
 	}
 	
+	public Integer getReg_time() {
+		return reg_time;
+	}
+
 	public void setReg_time(Integer reg_time) {
 		this.reg_time = reg_time;
 	}
-	
-	public Integer getReg_time() {
-		return this.reg_time;
-	}
-	
+
 	public void setLog_time(Integer log_time) {
 		this.log_time = log_time;
 	}

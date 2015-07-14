@@ -2,14 +2,16 @@ package blade.fm.route.admin;
 
 import java.util.Map;
 
-import blade.fm.route.BaseController;
-import blade.fm.service.UserService;
-import blade.fm.util.WebConst;
+import com.alibaba.fastjson.JSONObject;
 
-import org.unique.ioc.annotation.Autowired;
-import org.unique.plugin.dao.Page;
-import org.unique.web.annotation.Action;
-import org.unique.web.annotation.Controller;
+import blade.annotation.Inject;
+import blade.annotation.Path;
+import blade.annotation.Route;
+import blade.fm.route.BaseRoute;
+import blade.fm.service.UserService;
+import blade.plugin.sql2o.Page;
+import blade.servlet.Request;
+import blade.servlet.Response;
 
 /**
  * 用户后台
@@ -17,67 +19,66 @@ import org.unique.web.annotation.Controller;
  * @date:2014年8月19日
  * @version:1.0
  */
-@Controller
-public class UserController extends BaseController {
+@Path
+public class UserController extends BaseRoute {
 
-	@Autowired
+	@Inject
 	private UserService userService;
 	
 	/**
 	 * 后台首页
 	 */
-	@Action("/admin/user/index")
-	public void index() {
+	@Route("/admin/user/index")
+	public String index(Request request) {
 		Page<Map<String, Object>> userPage = userService.getPageMapList(null, null, null, page, pageSize, "uid desc");
-		r.setAttr("userPage", userPage);
-		r.render("/admin/user");
+		request.attribute("userPage", userPage);
+		return "/admin/user";
 	}
 
 	/**
 	 * 删除用户
 	 */
-	@Action("/admin/user/del")
-	public void del() {
-		Integer uid = r.getParaToInt("uid");
+	@Route("/admin/user/del")
+	public void del(Request request,Response response) {
+		Integer uid = request.queryToInt("uid");
 		int count = userService.update(uid, null, null, null, 0);
-		if (count > 0) {
-			r.renderText(WebConst.MSG_SUCCESS);
-		} else {
-			r.renderText(WebConst.MSG_FAILURE);
-		}
+		boolean flag = count > 0;
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("status", flag);
+		response.json(jsonObject.toJSONString());
 	}
 
 	/**
 	 * 保存用户
 	 */
-	@Action("/admin/user/save")
-	public void save() {
-		Integer uid = r.getParaToInt("uid");
+	@Route("/admin/user/save")
+	public String save(Request request, Response response) {
+		Integer uid = request.queryToInt("uid");
 		if (null != uid) {
-			String nickname = r.getPara("nickname");
-			Long space_size = r.getParaToLong("space_size");
+			String nickname = request.query("nickname");
+			Long space_size = request.queryToLong("space_size");
 			int count = userService.update(uid, null, nickname, space_size, null);
-			if (count > 0) {
-				r.renderText(WebConst.MSG_SUCCESS);
-			} else {
-				r.renderText(WebConst.MSG_FAILURE);
-			}
-			return;
+			boolean flag = count > 0;
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status", flag);
+			response.json(jsonObject.toJSONString());
+			return null;
 		}
-		r.render("/admin/edit_user");
+		return "/admin/edit_user";
 	}
 
 	/**
 	 * 编辑用户
 	 */
-	@Action("/admin/users/@uid")
-	public void edit_user(Integer uid) {
+	@Route("/admin/users/:uid")
+	public String edit_user(Request request) {
+		Integer uid = request.pathParamToInt("uid");
 		// 编辑
 		if (null != uid) {
 			Map<String, Object> user = userService.getMap(null, uid);
-			r.setAttr("user", user);
+			request.attribute("user", user);
 		}
-		r.render("/admin/edit_user");
+		return "/admin/edit_user";
 	}
 	
 }

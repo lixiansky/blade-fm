@@ -2,21 +2,21 @@ package blade.fm.route.front;
 
 import java.io.IOException;
 
+import org.apache.commons.lang3.StringUtils;
+
+import blade.annotation.Inject;
+import blade.annotation.Path;
+import blade.annotation.Route;
+import blade.fm.Constant;
 import blade.fm.model.Open;
 import blade.fm.model.User;
-import blade.fm.route.BaseController;
+import blade.fm.route.BaseRoute;
 import blade.fm.service.OpenService;
 import blade.fm.service.UserService;
-import blade.fm.util.SessionUtil;
-import blade.fm.util.WebConst;
-
-import org.apache.http.client.ClientProtocolException;
-import org.apache.log4j.Logger;
-import org.unique.common.tools.StringUtils;
-import org.unique.ioc.annotation.Autowired;
-import org.unique.web.annotation.Action;
-import org.unique.web.annotation.Controller;
-import org.unique.web.render.impl.PatchcaRender;
+import blade.kit.IpKit;
+import blade.kit.log.Logger;
+import blade.servlet.Request;
+import blade.servlet.Response;
 
 import com.qq.connect.QQConnectException;
 import com.qq.connect.api.OpenID;
@@ -31,36 +31,34 @@ import com.qq.connect.oauth.Oauth;
  * @date:2014年8月20日
  * @version:1.0
  */
-@Controller("/")
-public class IndexController extends BaseController {
+@Path("/")
+public class IndexController extends BaseRoute {
 
 	private Logger logger = Logger.getLogger(IndexController.class);
 			
-	@Autowired
+	@Inject
 	private UserService userService;
-	@Autowired
+	@Inject
 	private OpenService openService;
 	
-	@Action("index")
-	public void index() {
-		r.render("index");
+	@Route("index")
+	public String index(Request request) {
+		return "index";
 	}
 
-	@Action
-	public void up(){
-		r.render("up");
+	@Route("up")
+	public String up(){
+		return "up";
 	}
 	
 	/**
 	 * 用qq登录
 	 */
-	@Action
-	public void qq_login() {
+	@Route("qq_login")
+	public void qq_login(Request request, Response response) {
 		try {
-			r.getResponse().sendRedirect(new Oauth().getAuthorizeURL(r.getRequest()));
+			response.redirect(new Oauth().getAuthorizeURL(request.servletRequest()));
 		} catch (QQConnectException e) {
-			logger.warn(e.getMessage());
-		} catch (IOException e) {
 			logger.warn(e.getMessage());
 		}
 	}
@@ -70,10 +68,10 @@ public class IndexController extends BaseController {
 	 * @throws IOException 
 	 * @throws ClientProtocolException 
 	 */
-	@Action
-	public void qq_callback() throws ClientProtocolException, IOException {
+	@Route("qq_callback")
+	public void qq_callback(Request request, Response response) {
 		try {
-			AccessToken accessTokenObj = (new Oauth()).getAccessTokenByRequest(r.getRequest());
+			AccessToken accessTokenObj = (new Oauth()).getAccessTokenByRequest(request.servletRequest());
 
 			String accessToken = null, openID = null;
 			long tokenExpireIn = 0L;
@@ -81,13 +79,13 @@ public class IndexController extends BaseController {
 			if (accessTokenObj.getAccessToken().equals("")) {
 				// 我们的网站被CSRF攻击了或者用户取消了授权做一些数据统计工作
 				System.out.print("没有获取到响应参数");
-				r.redirect("/admin/login");
+				response.redirect("/admin/login");
 			} else {
 				accessToken = accessTokenObj.getAccessToken();
 				tokenExpireIn = accessTokenObj.getExpireIn();
 				
-				WebConst.QQ_TOKEN = accessToken;
-				WebConst.QQ_TOKEN_EXPIREIN = tokenExpireIn;
+				Constant.QQ_TOKEN = accessToken;
+				Constant.QQ_TOKEN_EXPIREIN = tokenExpireIn;
 				
 				// 利用获取到的accessToken 去获取当前用的openid -------- start
 				OpenID openIDObj = new OpenID(accessToken);
@@ -98,15 +96,15 @@ public class IndexController extends BaseController {
 				if(null != openUser){
 					User user = userService.get(openUser.getEmail(), 1);
 					if(null != user){
-						SessionUtil.setLoginUser(user);
-						r.redirect("/admin/index");
+						request.session().attribute(Constant.LOGIN_SESSION, user);
+						response.redirect("/admin/index");
 					}
 				} else{
 					UserInfo qzoneUserInfo = new UserInfo(accessToken, openID);
 					UserInfoBean userInfoBean = qzoneUserInfo.getUserInfo();
-					r.setAttr("openid", openID);
-					r.setAttr("nickname", userInfoBean.getNickname());
-					r.render("/bind_qq");
+					request.attribute("openid", openID);
+					request.attribute("nickname", userInfoBean.getNickname());
+					response.redirect("/bind_qq");
 				}
 			}
 		} catch (QQConnectException e) {
@@ -117,12 +115,12 @@ public class IndexController extends BaseController {
 	/**
 	 * 确认绑定qq
 	 */
-	@Action
-	public void save_bind_qq(){
-		String openId = r.getPara("openid");
-		String email = r.getPara("email");
-		String nickname = r.getPara("nickname");
-		String password = r.getPara("password");
+	@Route("save_bind_qq")
+	public void save_bind_qq(Request request, Response response){
+		String openId = request.query("openid");
+		String email = request.query("email");
+		String nickname = request.query("nickname");
+		String password = request.query("password");
 		if(StringUtils.isNotBlank(openId) && StringUtils.isNotBlank(email)){
 			if(null == openService.get(email, null, 1)){
 				int count = openService.save(email, 1, openId);
@@ -130,31 +128,27 @@ public class IndexController extends BaseController {
 					User user = userService.get(email, 1);
 					//登录管理员 放入session
 					if (null != user) {
-						SessionUtil.setLoginUser(user);
-						r.renderText(WebConst.MSG_SUCCESS);
+						request.session().attribute(Constant.LOGIN_SESSION, user);
+						response.text(Constant.MSG_SUCCESS);
 					} else {
-						user = userService.register(nickname, email, password, StringUtils.getIP(r.getRequest()));
+						user = userService.register(nickname, email, password, IpKit.getIpAddrByRequest(request.servletRequest()));
 						if(null != user){
-							SessionUtil.setLoginUser(user);
-							r.renderText(WebConst.MSG_SUCCESS);
+							request.session().attribute(Constant.LOGIN_SESSION, user);
+							response.text(Constant.MSG_SUCCESS);
 						} else{
-							r.renderText(WebConst.MSG_FAILURE);
+							response.text(Constant.MSG_FAILURE);
 						}
 					}
 				} else{
-					r.renderText(WebConst.MSG_FAILURE);
+					response.text(Constant.MSG_FAILURE);
 				}
 			} else{
 				// 已经绑定过
-				r.renderText(WebConst.MSG_EXIST);
+				response.text(Constant.MSG_EXIST);
 			}
 			return;
 		}
-		r.renderText(WebConst.MSG_ERROR);
+		response.text(Constant.MSG_ERROR);
 	}
 
-	@Action
-	public void verify_code() {
-		r.render(new PatchcaRender());
-	}
 }

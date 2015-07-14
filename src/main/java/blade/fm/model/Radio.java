@@ -13,7 +13,6 @@ import blade.plugin.sql2o.Table;
 public class Radio extends Model {
 
 	private static final long serialVersionUID = 1L;
-	public static Radio db = new Radio();
 	private Integer id;
 	private Integer uid;
 	private String title;

@@ -1,8 +1,13 @@
 package blade.fm.service.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
+import blade.annotation.Component;
+import blade.annotation.Inject;
 import blade.fm.model.Open;
 import blade.fm.model.User;
 import blade.fm.service.ActiveService;
@@ -11,11 +16,9 @@ import blade.fm.service.UserService;
 import blade.fm.util.Base64;
 import blade.fm.util.BeanUtil;
 import blade.fm.util.EncrypUtil;
-
-import org.apache.commons.lang3.StringUtils;
-
-import blade.annotation.Component;
-import blade.annotation.Inject;
+import blade.kit.CollectionKit;
+import blade.kit.DateKit;
+import blade.kit.StringKit;
 import blade.plugin.sql2o.Page;
 
 @Component
@@ -28,14 +31,13 @@ public class UserServiceImpl implements UserService {
 	private ActiveService activeService;
 
 	private User find(Integer uid, String email, Integer is_admin, Integer status) {
-		SqlBase base = SqlBase.select("select t.* from t_user t");
-		base.eq("t.uid", uid).eq("t.is_admin", is_admin).eq("t.email", email).eq("t.status", status);
-		return User.db.find(base.getSQL(), base.getParams());
+		return model.select().where("uid", uid).where("is_admin", is_admin)
+				.where("email", email).where("status", status).fetchOne();
 	}
 
 	@Override
 	public User getByUid(Integer uid) {
-		return User.db.findByPK(uid);
+		return model.select().fetchByPk(uid);
 	}
 
 	@Override
@@ -43,12 +45,18 @@ public class UserServiceImpl implements UserService {
 		User user = null;
 		//密码规则:md5(email+password)
 		String md5pwd = EncrypUtil.md5(email + password);
-		Integer currtime = DateUtil.getCurrentTime();
+		Integer currtime = DateKit.getUnixTimeByDate(new Date());
 		int count = 0;
 		try {
-			count = User.db.update("insert into t_user(nickname, email, password, reg_ip, reg_time, log_time, status) "
-					+ "values(?, ?, ?, ?, ?, ?, ?)", nickname, email, md5pwd, ip, currtime, currtime, 1);
-		} catch (UpdateException e) {
+			count = model.insert()
+					.param("nickname", nickname)
+					.param("email", email)
+					.param("password", md5pwd)
+					.param("reg_ip", ip)
+					.param("reg_time", currtime)
+					.param("log_time", currtime)
+					.param("status", 1).executeAndCommit();
+		} catch (Exception e) {
 			count = 0;
 		}
 		if (count > 0) {
@@ -71,17 +79,15 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<User> getList(String nickname, String email, Integer status, String order) {
-		SqlBase base = SqlBase.select("select u.* from t_user u");
-		base.likeLeft("u.nickname", nickname).likeLeft("u.email", email).eq("u.status", status).order("u." + order);
-		return User.db.findList(base.getSQL(), base.getParams());
+		return model.select().like("nickname", "%" + nickname).like("email", "%" + email)
+				.where("status", status).orderBy(order).fetchList();
 	}
 
 	@Override
 	public Page<User> getPageList(String nickname, String email, Integer status, Integer page, Integer pageSize,
 			String order) {
-		SqlBase base = SqlBase.select("select u.* from t_user u");
-		base.likeLeft("u.nickname", nickname).likeLeft("u.email", email).eq("u.status", status).order("u." + order);
-		return User.db.findListPage(page, pageSize, base.getSQL(), base.getParams());
+		return model.select().like("nickname", "%" + nickname).like("email", "%" + email)
+				.where("status", status).orderBy(order).fetchPage(page, pageSize);
 	}
 
 	@Override
@@ -89,15 +95,15 @@ public class UserServiceImpl implements UserService {
 		int count = 0;
 		if (null != uid) {
 			try {
-				count = User.db.delete("delete from t_user where uid = ?", uid);
-			} catch (UpdateException e) {
+				count = model.delete().where("uid", uid).executeAndCommit();
+			} catch (Exception e) {
 				count = 0;
 			}
 		}
 		if (StringUtils.isNotBlank(email)) {
 			try {
-				count = User.db.delete("delete from t_user where email = ?", email);
-			} catch (UpdateException e) {
+				count = model.delete().where("email", email).executeAndCommit();
+			} catch (Exception e) {
 				count = 0;
 			}
 		}
@@ -109,8 +115,8 @@ public class UserServiceImpl implements UserService {
 		int count = 0;
 		if (null != uids) {
 			try {
-				count = User.db.delete("delete from t_user where uid in (?)", uids);
-			} catch (UpdateException e) {
+				count = model.delete().in("uid", uids).executeAndCommit();
+			} catch (Exception e) {
 				count = 0;
 			}
 		}
@@ -120,10 +126,10 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public int enable(String email, Integer uid, Integer status) {
 		if (null != uid) {
-			return User.db.update("update t_user u set u.status = ? where u.uid = ?", status, uid);
+			return model.update().param("status", status).where("uid", uid).executeAndCommit();
 		}
 		if (StringUtils.isNotBlank(email)) {
-			return User.db.update("update t_user u set u.status = ? where u.email = ?", status, email);
+			return model.update().param("status", status).where("email", email).executeAndCommit();
 		}
 		return 0;
 	}
@@ -143,9 +149,8 @@ public class UserServiceImpl implements UserService {
 		int count = 0;
 		if (null != uid && null != useSpace) {
 			try {
-				count = User.db.update("update t_user u set u.use_size = (u.use_size + ?) where u.uid = ?", useSpace,
-						uid);
-			} catch (UpdateException e) {
+				count = model.update().param("use_size", "(u.use_size + "+useSpace+")").where("uid", uid).executeAndCommit();
+			} catch (Exception e) {
 				count = 0;
 			}
 		}
@@ -164,7 +169,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User openBind(Integer type, String openid, String nickName, String email, String ip) {
-		String pwd = StringUtils.randomStr(6);
+		String pwd = StringKit.random(6);
 		User user = this.register(nickName, email, pwd, ip);
 		openService.save(email, type, openid);
 		return user;
@@ -178,11 +183,15 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public int update(Integer uid, String email, String nickName, Long space_size, Integer status) {
 		int count = 0;
-		SqlBase base = SqlBase.update("update t_user u");
-		base.set("u.status", status).set("nickName", nickName).set("space_size", space_size).eq("u.uid", uid).eq("u.email", email);
 		try {
-			count = User.db.update(base.getSQL(), base.getParams());
-		} catch (UpdateException e) {
+			count = model.update()
+					.param("status", status)
+					.param("nickName", nickName)
+					.param("space_size", space_size)
+					.where("uid", uid)
+					.where("email", email)
+					.executeAndCommit();
+		} catch (Exception e) {
 			count = 0;
 		}
 		return count;
@@ -196,7 +205,7 @@ public class UserServiceImpl implements UserService {
 		List<User> userList = pageList.getResults();
 		Page<Map<String, Object>> pageMap = new Page<Map<String, Object>>(pageList.getTotalCount() , pageList.getPage(), pageList.getPageSize());
 
-		List<Map<String, Object>> listMap = CollectionUtil.newArrayList();
+		List<Map<String, Object>> listMap = CollectionKit.newArrayList();
 		for (int i = 0, len = userList.size(); i < len; i++) {
 			User user = userList.get(i);
 			if (null != user) {
@@ -209,17 +218,17 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Map<String, Object> getMap(User user, Integer uid) {
-		Map<String, Object> resultMap = CollectionUtil.newHashMap();
+		Map<String, Object> resultMap = CollectionKit.newHashMap();
 		if (null == user) {
 			user = this.find(uid, null, null, null);
 		}
 		if (null != user) {
 			resultMap = BeanUtil.toMap(user);
 			if(null != user.getReg_time()){
-				resultMap.put("reg_time_zh", DateUtil.convertIntToDatePattern(user.getReg_time(), "yyyy/MM/dd HH:mm"));
+				resultMap.put("reg_time_zh", DateKit.formatDateByUnixTime(user.getReg_time(), "yyyy/MM/dd HH:mm"));
 			}
 			if(null != user.getLog_time()){
-				resultMap.put("last_login_time", DateUtil.convertIntToDatePattern(user.getLog_time(), "yyyy/MM/dd HH:mm"));
+				resultMap.put("last_login_time", DateKit.formatDateByUnixTime(user.getLog_time(), "yyyy/MM/dd HH:mm"));
 			}
 		}
 		return resultMap;

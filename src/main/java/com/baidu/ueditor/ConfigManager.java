@@ -197,7 +197,7 @@ public final class ConfigManager {
 		StringBuilder builder = new StringBuilder();
 
 		try {
-
+			
 			InputStreamReader reader = new InputStreamReader(new FileInputStream(path), "UTF-8");
 			BufferedReader bfReader = new BufferedReader(reader);
 

@@ -3,15 +3,17 @@ package blade.fm.route.admin;
 import java.io.File;
 import java.util.Map;
 
-import blade.fm.route.BaseController;
-import blade.fm.service.FileService;
+import blade.BladeWebContext;
+import blade.annotation.Inject;
+import blade.annotation.Path;
+import blade.annotation.Route;
+import blade.fm.Constant;
+import blade.fm.route.BaseRoute;
 import blade.fm.service.SettingService;
-import blade.fm.util.WebConst;
+import blade.servlet.Request;
+import blade.servlet.Response;
 
-import org.unique.ioc.annotation.Autowired;
-import org.unique.web.annotation.Action;
-import org.unique.web.annotation.Controller;
-import org.unique.web.core.Const;
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * 系统后台设置
@@ -19,55 +21,55 @@ import org.unique.web.core.Const;
  * @date:2014年10月13日
  * @version:1.0
  */
-@Controller
-public class SysController extends BaseController {
-
-	@Autowired
+@Path
+public class SysController extends BaseRoute {
+	
+	@Inject
 	private SettingService settingService;
-	@Autowired
-	private FileService fileService;
 	
 	/**
 	 * 系统设置
 	 */
-	@Action("/admin/sys/setting")
-	public void setting() {
+	@Route("/admin/sys/setting")
+	public String setting(Request request) {
 		Map<String, String> setting = settingService.getAllSetting();
-		r.setAttr("setting", setting);
-		r.render("/admin/setting");
+		request.attribute("setting", setting);
+		return "/admin/setting";
 	}
 
 	/**
 	 * 保存系统配置
 	 */
-	@Action("/admin/sys/save_setting")
-	public void save_setting() {
-		String site_title = r.getPara("site_title");
-		String site_keywords = r.getPara("site_keywords");
-		String site_description = r.getPara("site_description");
-		String sina_weibo = r.getPara("sina_weibo");
-		String tencent_weibo = r.getPara("tencent_weibo");
+	@Route("/admin/sys/save_setting")
+	public void save_setting(Request request, Response response) {
+		String site_title = request.query("site_title");
+		String site_keywords = request.query("site_keywords");
+		String site_description = request.query("site_description");
+		String sina_weibo = request.query("sina_weibo");
+		String tencent_weibo = request.query("tencent_weibo");
+		boolean flag = false;
 		try {
 			settingService.save("site_title", site_title);
 			settingService.save("site_keywords", site_keywords);
 			settingService.save("site_description", site_description);
 			settingService.save("sina_weibo", sina_weibo);
 			settingService.save("tencent_weibo", tencent_weibo);
-			r.renderText(WebConst.MSG_SUCCESS);
-			return;
+			flag = true;
 		} catch (Exception e) {
 			e.printStackTrace();
+			flag = false;
 		}
-		r.renderText(WebConst.MSG_FAILURE);
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("status", flag);
+		response.json(jsonObject.toJSONString());
 	}
 
 	/**
 	 * 清空缓存
 	 */
-	@Action("/admin/sys/cleanCache")
-	public void cleanCache() {
-		String temp = r.getRequest().getServletContext().getRealPath("/")
-				+ Const.CONST_MAP.get("unique.web.upload.path").toString() + File.separator + "temp" + File.separator;
+	@Route("/admin/sys/cleanCache")
+	public void cleanCache(Request request, Response response) {
+		String temp = BladeWebContext.servletContext().getRealPath("/") + Constant.UPLOAD_FOLDER + File.separator + "temp" + File.separator;
 		File tempDir = new File(temp);
 		if (tempDir.isDirectory()) {
 			File[] files = tempDir.listFiles();
@@ -75,17 +77,10 @@ public class SysController extends BaseController {
 				f.delete();
 			}
 		}
-		r.renderText(WebConst.MSG_SUCCESS);
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("status", true);
+		response.json(jsonObject.toJSONString());
 	}
 	
-	/**
-	 * 清空七牛无用资源
-	 */
-	@Action("/admin/sys/cleanQiniu")
-	public void cleanQiniu(){
-		Integer type = r.getParaToInt("type");
-		String key = r.getPara("key");
-		fileService.clean(type, key);
-		r.renderText(WebConst.MSG_SUCCESS);
-	}
+	
 }

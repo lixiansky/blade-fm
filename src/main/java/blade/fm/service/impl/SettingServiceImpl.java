@@ -3,23 +3,21 @@ package blade.fm.service.impl;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
+import blade.annotation.Component;
 import blade.fm.model.Setting;
 import blade.fm.service.SettingService;
+import blade.kit.CollectionKit;
 
-import org.unique.common.tools.CollectionUtil;
-import org.unique.common.tools.StringUtils;
-import org.unique.ioc.annotation.Service;
-import org.unique.plugin.dao.SqlBase;
-import org.unique.plugin.db.exception.UpdateException;
-
-@Service
+@Component
 public class SettingServiceImpl implements SettingService {
+	
+	private Setting model = new Setting();
 	
 	@Override
 	public Setting get(String key) {
-		SqlBase base = SqlBase.select("select t.* from t_setting t");
-        base.eq("skey", key);
-        return Setting.db.find(base.getSQL(), base.getParams());
+        return model.select().where("skey", key).fetchOne();
 	}
 
 	@Override
@@ -31,17 +29,17 @@ public class SettingServiceImpl implements SettingService {
 				if(null != setting){
 					if(StringUtils.isNotBlank(key) && StringUtils.isNotBlank(value)){
 						try {
-							count = Setting.db.update("update t_setting set svalue = ? where id = ?", value, setting.getId());
-						} catch (UpdateException e) {
+							count = model.update().param("svalue", value).where("id", setting.getId()).executeAndCommit();
+						} catch (Exception e) {
 							e.printStackTrace();
 							count = 0;
 						}
 					}
 				} else{
-					count = Setting.db.insert("insert into t_setting(skey, svalue) values(?, ?)", key, value);
+					count = model.insert().param("skey", key).param("svalue", value).executeAndCommit();
 				}
 			}
-		} catch (UpdateException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			count = 0;
 		}
@@ -53,8 +51,8 @@ public class SettingServiceImpl implements SettingService {
 		int count = 0;
 		if(StringUtils.isNotBlank(key) && StringUtils.isNotBlank(value)){
 			try {
-				count = Setting.db.update("update t_setting t set svalue = ? where skey = ?", value, key);
-			} catch (UpdateException e) {
+				count = model.update().param("svalue", value).where("skey", key).executeAndCommit();
+			} catch (Exception e) {
 				e.printStackTrace();
 				count = 0;
 			}
@@ -67,8 +65,8 @@ public class SettingServiceImpl implements SettingService {
 		int count = 0;
 		if(StringUtils.isNotBlank(key)){
 			try {
-				count = Setting.db.delete("delete from t_setting t where skey = ?", key);
-			} catch (UpdateException e) {
+				count = model.delete().where("skey", key).executeAndCommit();
+			} catch (Exception e) {
 				e.printStackTrace();
 				count = 0;
 			}
@@ -78,8 +76,8 @@ public class SettingServiceImpl implements SettingService {
 	
 	@Override
 	public Map<String, String> getAllSetting() {
-		Map<String, String> map = CollectionUtil.newHashMap();
-		List<Setting> settingList = Setting.db.findList("select t.* from t_setting t");
+		Map<String, String> map = CollectionKit.newHashMap();
+		List<Setting> settingList = model.select().fetchList();
 		for(Setting setting : settingList){
 			map.put(setting.getSkey(), setting.getSvalue());
 		}

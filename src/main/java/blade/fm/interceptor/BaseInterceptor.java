@@ -16,7 +16,7 @@ import blade.servlet.Response;
 
 /**
  * 全局拦截器
- * @author Rex
+ * @authoRequest request, Response responseex
  */
 @Interceptor
 public class BaseInterceptor {

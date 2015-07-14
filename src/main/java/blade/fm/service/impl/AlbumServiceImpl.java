@@ -4,17 +4,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
+import blade.annotation.Component;
+import blade.annotation.Inject;
+import blade.fm.Constant;
 import blade.fm.QiniuApi;
 import blade.fm.model.Album;
 import blade.fm.service.AlbumService;
 import blade.fm.service.FileService;
 import blade.fm.util.BeanUtil;
-import blade.fm.util.WebConst;
-
-import org.apache.commons.lang3.StringUtils;
-
-import blade.annotation.Component;
-import blade.annotation.Inject;
 import blade.kit.CollectionKit;
 import blade.kit.DateKit;
 import blade.kit.FileKit;
@@ -29,9 +28,6 @@ public class AlbumServiceImpl implements AlbumService {
 	private Logger logger = Logger.getLogger(AlbumServiceImpl.class);
 	
 	private Album model = new Album();
-	
-	@Inject
-	private FileService fileService;
 	
 	@Inject
 	private AlbumService albumService;
@@ -115,10 +111,10 @@ public class AlbumServiceImpl implements AlbumService {
 				Map<String, Object> map = picList.get(i);
 				if(map.size() > 0){
 					String key = map.get("savepath").toString();
-					String filePath = WebConst.getWebRootPath() + key;
+					String filePath = Constant.WEB_ROOT + "/" + key;
 					if (FileKit.isFile(filePath)) {
 						//上传图片
-						fileService.upload(key, filePath);
+//						fileService.upload(key, filePath);
 						map.put("key", key);
 						map.put("url", QiniuApi.getUrlByKey(key));
 						upCount++;
@@ -187,10 +183,10 @@ public class AlbumServiceImpl implements AlbumService {
 								upCount++;
 								newList.add(map);
 							} else{
-								String filePath = WebConst.getWebRootPath() + key;
+								String filePath = Constant.WEB_ROOT + "/" + key;
 								if (FileKit.isFile(filePath)) {
 									//上传图片
-									fileService.upload(key, filePath);
+//									fileService.upload(key, filePath);
 									map.put("key", key);
 									map.put("url", QiniuApi.getUrlByKey(key));
 									upCount++;

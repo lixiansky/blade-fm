@@ -2,14 +2,18 @@ package blade.fm.route.front;
 
 import java.util.Map;
 
-import blade.fm.route.BaseController;
-import blade.fm.service.AlbumService;
+import org.apache.commons.lang3.StringUtils;
 
-import org.unique.common.tools.StringUtils;
-import org.unique.ioc.annotation.Autowired;
-import org.unique.plugin.dao.Page;
-import org.unique.web.annotation.Action;
-import org.unique.web.annotation.Controller;
+import com.alibaba.fastjson.JSON;
+
+import blade.annotation.Inject;
+import blade.annotation.Path;
+import blade.annotation.Route;
+import blade.fm.route.BaseRoute;
+import blade.fm.service.AlbumService;
+import blade.plugin.sql2o.Page;
+import blade.servlet.Request;
+import blade.servlet.Response;
 
 /**
  * 相册/图片管理
@@ -17,34 +21,35 @@ import org.unique.web.annotation.Controller;
  * @date:2014年8月19日
  * @version:1.0
  */
-@Controller("/pictures")
-public class PictureController extends BaseController {
+@Path("/pictures")
+public class PictureController extends BaseRoute {
 
-	@Autowired
+	@Inject
 	private AlbumService pictureService;
 	
-	@Action
-	public void index(){
-		String mode = r.getPara("mode");
+	@Route
+	public String index(Request request, Response response){
+		String mode = request.query("mode");
 		Page<Map<String, Object>> picPage = pictureService.getPageMapList(uid, null, 1, page, pageSize, "create_time desc");
 		if(StringUtils.isNotBlank(mode) && mode.equals("ajax")){
-			r.renderJson(picPage);
-			return;
+			response.json(JSON.toJSONString(picPage));
+			return null;
 		} else{
-			r.setAttr("picPage", picPage);
+			request.attribute("picPage", picPage);
 		}
-		r.render("/picture");
+		return "picture";
 	}
 	
 	/**
 	 * 相册详情
 	 */
-	@Action("/pictures/@id")
-	public void detail(Integer id){
+	@Route("/pictures/:id")
+	public String detail(Request request){
+		Integer id = request.pathParamToInt("id");
 		if(null != id){
 			Map<String, Object> pictrue = pictureService.getMap(null, id);
-			r.setAttr("pictrue", pictrue);
+			request.attribute("pictrue", pictrue);
 		}
-		r.render("/preview");
+		return "preview";
 	}
 }

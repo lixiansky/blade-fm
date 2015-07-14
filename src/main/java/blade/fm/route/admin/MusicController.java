@@ -3,18 +3,21 @@ package blade.fm.route.admin;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
+import com.alibaba.fastjson.JSONObject;
+
+import blade.annotation.Inject;
+import blade.annotation.Path;
+import blade.annotation.Route;
 import blade.fm.model.Mcat;
-import blade.fm.route.BaseController;
+import blade.fm.route.BaseRoute;
 import blade.fm.service.McatService;
 import blade.fm.service.MusicService;
 import blade.fm.service.SpecialService;
-import blade.fm.util.WebConst;
-
-import org.apache.commons.lang3.StringUtils;
-import org.unique.ioc.annotation.Autowired;
-import org.unique.plugin.dao.Page;
-import org.unique.web.annotation.Action;
-import org.unique.web.annotation.Controller;
+import blade.plugin.sql2o.Page;
+import blade.servlet.Request;
+import blade.servlet.Response;
 
 /**
  * 音乐管理
@@ -22,62 +25,63 @@ import org.unique.web.annotation.Controller;
  * @date:2014年10月11日
  * @version:1.0
  */
-@Controller
-public class MusicController extends BaseController {
+@Path
+public class MusicController extends BaseRoute {
 
-	@Autowired
+	@Inject
 	private MusicService musicService;
-	@Autowired
+	@Inject
 	private McatService mcatService;
-	@Autowired
+	@Inject
 	private SpecialService specialService;
 
 	/**
 	 * 音乐列表
 	 */
-	@Action("/admin/music/index")
-	public void index() {
-		String singer = r.getPara("singer");
-		String song = r.getPara("song");
+	@Route("/admin/music/index")
+	public String index(Request request) {
+		String singer = request.query("singer");
+		String song = request.query("song");
 		Page<Map<String, Object>> musicPage = musicService.getPageMapList(uid, singer, song, null, null, 1, page,
 				pageSize, "id desc");
-		r.setAttr("pageMap", musicPage);
-		r.render("/admin/music");
+		request.attribute("pageMap", musicPage);
+		return "/admin/music";
 	}
 
 	/**
 	 * 显示音乐
 	 */
-	@Action("/admin/music/@id")
-	public void edit_music(Integer mid) {
+	@Route("/admin/music/:id")
+	public String edit_music(Request request) {
+		Integer mid = request.pathParamToInt("id");
 		// 编辑
 		if (null != mid) {
 			Map<String, Object> music = musicService.getMap(null, mid);
-			r.setAttr("music", music);
+			request.attribute("music", music);
 		}
 		List<Mcat> mcatList = mcatService.getList(1);
 		List<Map<String, Object>> specialList = specialService.getList(null, 1, null, null, 1, "id desc");
-		r.setAttr("catList", mcatList);
-		r.setAttr("specialList", specialList);
-		r.render("/admin/edit_music");
+		request.attribute("catList", mcatList);
+		request.attribute("specialList", specialList);
+		return "/admin/edit_music";
 	}
 
 	/**
 	 * 保存音乐
 	 */
-	@Action("/admin/music/save")
-	public void save() {
-		String step = r.getPara("step");
+	@Route("/admin/music/save")
+	public String save(Request request, Response response) {
+		String step = request.query("step");
 		if (StringUtils.isNoneBlank(step)) {
-			Integer mid = r.getParaToInt("mid");
-			String singer = r.getPara("singer");
-			String song = r.getPara("song");
-			Integer sid = r.getParaToInt("sid");
-			String song_path = r.getPara("song_path");
-			String cover_path = r.getPara("cover_path");
-			String introduce = r.getPara("introduce");
-			String lrc = r.getPara("lrc");
-			String cids = r.getPara("cids");
+			Integer mid = request.queryToInt("mid");
+			String singer = request.query("singer");
+			String song = request.query("song");
+			Integer sid = request.queryToInt("sid");
+			String song_path = request.query("song_path");
+			String cover_path = request.query("cover_path");
+			String introduce = request.query("introduce");
+			String lrc = request.query("lrc");
+			String cids = request.query("cids");
 
 			boolean flag = false;
 			uid = 1;
@@ -86,37 +90,33 @@ public class MusicController extends BaseController {
 			} else {
 				flag = musicService.save(uid, singer, song, song_path, cover_path, introduce, cids, lrc, null, sid);
 			}
-			if (flag) {
-				r.renderText(WebConst.MSG_SUCCESS);
-			} else {
-				r.renderText(WebConst.MSG_ERROR);
-			}
-			return;
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status", flag);
+			response.json(jsonObject.toJSONString());
+			return null;
 		}
+		
 		List<Mcat> mcatList = mcatService.getList(1);
 		List<Map<String, Object>> specialList = specialService.getList(null, 1, null, null, 1, "id desc");
-		r.setAttr("catList", mcatList);
-		r.setAttr("specialList", specialList);
-		r.render("/admin/edit_music");
+		request.attribute("catList", mcatList);
+		request.attribute("specialList", specialList);
+		return "/admin/edit_music";
 	}
 
 	/**
 	 * 删除音乐
 	 */
-	@Action("/admin/music/del")
-	public void del() {
-		Integer mid = r.getParaToInt("mid");
+	@Route("/admin/music/del")
+	public void del(Request request, Response response) {
+		Integer mid = request.queryToInt("mid");
 		boolean flag = false;
 		if (null != mid) {
 			flag = musicService.enable(mid, 0);
-			if (flag) {
-				r.renderText(WebConst.MSG_SUCCESS);
-			} else {
-				r.renderText(WebConst.MSG_FAILURE);
-			}
-		} else {
-			r.renderText(WebConst.MSG_FAILURE);
 		}
+		
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("status", flag);
+		response.json(jsonObject.toJSONString());
 	}
 
 }

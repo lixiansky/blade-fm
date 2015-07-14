@@ -1,8 +1,15 @@
 package blade.fm.service.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+
+import blade.annotation.Component;
+import blade.annotation.Inject;
+import blade.fm.Constant;
 import blade.fm.QiniuApi;
 import blade.fm.model.Special;
 import blade.fm.model.User;
@@ -12,41 +19,36 @@ import blade.fm.service.RadioService;
 import blade.fm.service.SpecialService;
 import blade.fm.service.UserService;
 import blade.fm.util.BeanUtil;
-import blade.fm.util.WebConst;
+import blade.kit.CollectionKit;
+import blade.kit.DateKit;
+import blade.kit.FileKit;
+import blade.plugin.sql2o.Model;
+import blade.plugin.sql2o.Page;
 
-import org.apache.log4j.Logger;
-import org.unique.common.tools.CollectionUtil;
-import org.unique.common.tools.DateUtil;
-import org.unique.common.tools.FileUtil;
-import org.unique.common.tools.StringUtils;
-import org.unique.ioc.annotation.Autowired;
-import org.unique.ioc.annotation.Service;
-import org.unique.plugin.dao.Page;
-import org.unique.plugin.dao.SqlBase;
-import org.unique.plugin.db.exception.UpdateException;
-
-@Service
+@Component
 public class SpecialServiceImpl implements SpecialService {
 
 	private Logger logger = Logger.getLogger(SpecialServiceImpl.class);
 
-	@Autowired
+	@Inject
 	private FileService fileService;
-	@Autowired
+	@Inject
 	private MusicService musicService;
-	@Autowired
+	@Inject
 	private RadioService radioService;
-	@Autowired
+	@Inject
 	private UserService userService;
 
+	private Special model = new Special();
+	
 	@Override
 	public Special get(Integer sid) {
-		return Special.db.findByPK(sid);
+		return model.select().fetchByPk(sid);
 	}
 
 	@Override
 	public Map<String, Object> getMap(Special special, Integer sid) {
-		Map<String, Object> resultMap = CollectionUtil.newHashMap();
+		Map<String, Object> resultMap = CollectionKit.newHashMap();
 		if (null == special) {
 			special = this.get(sid);
 		}
@@ -65,9 +67,9 @@ public class SpecialServiceImpl implements SpecialService {
 			// 创建时间
 			if (null != special.getCreate_time()) {
 				resultMap.put("date_zh",
-						DateUtil.convertIntToDatePattern(special.getCreate_time(), "yyyy-MM-dd"));
+						DateKit.formatDateByUnixTime(special.getCreate_time(), "yyyy-MM-dd"));
 				resultMap.put("create_time_zh",
-						DateUtil.convertIntToDatePattern(special.getCreate_time(), "yyyy-MM-dd HH:mm"));
+						DateKit.formatDateByUnixTime(special.getCreate_time(), "yyyy-MM-dd HH:mm"));
 			}
 			// 上传人
 			if(null != special.getUid()){
@@ -77,7 +79,7 @@ public class SpecialServiceImpl implements SpecialService {
 			// 最后更新时间
 			if (null != special.getLast_time()) {
 				resultMap.put("last_time_zh",
-						DateUtil.convertIntToDatePattern(special.getLast_time(), "yyyy-MM-dd HH:mm"));
+						DateKit.formatDateByUnixTime(special.getLast_time(), "yyyy-MM-dd HH:mm"));
 			}
 
 		}
@@ -88,23 +90,29 @@ public class SpecialServiceImpl implements SpecialService {
 	public boolean save(Integer uid, String title, String introduce, String cover,
 			Integer is_fine, Integer status) {
 		int count = 0;
-		Integer currentTime = DateUtil.getCurrentTime();
+		Integer currentTime = DateKit.getUnixTimeByDate(new Date());
 		uid = (null == uid) ? 1 : uid;
 		
 		String cover_key = "";
 		if (StringUtils.isNotBlank(cover)) {
 			cover_key = cover;
-			String filePath = WebConst.getWebRootPath() + cover;
-			if (!cover.startsWith("http://") && FileUtil.isFile(filePath)) {
+			String filePath = Constant.WEB_ROOT + cover;
+			if (!cover.startsWith("http://") && FileKit.isFile(filePath)) {
 				//上传专辑封面
 				fileService.upload(cover_key, filePath);
 			}
 		}
 		try {
-			count = Special.db.insert(
-					"insert into t_special(uid, title, introduce, cover, create_time, last_time, is_fine, status) "
-							+ "values(?,?,?,?,?,?,?,?,?,?)", uid, title, introduce, cover_key, currentTime, currentTime, is_fine, status);
-		} catch (UpdateException e) {
+			count = model.insert()
+					.param("uid", uid)
+					.param("title", title)
+					.param("introduce", introduce)
+					.param("cover", cover_key)
+					.param("create_time", currentTime)
+					.param("last_time", currentTime)
+					.param("is_fine", is_fine)
+					.param("status", status).executeAndCommit();
+		} catch (Exception e) {
 			logger.warn("保存专辑失败：" + e.getMessage());
 			count = 0;
 		}
@@ -119,36 +127,37 @@ public class SpecialServiceImpl implements SpecialService {
 		if (null != sid) {
 			Special special = this.get(sid);
 			if (null != special) {
-				SqlBase base = SqlBase.update("update t_special");
-
+				
+				Model updateModel = model.update();
+				
 				if (StringUtils.isNotBlank(title) && !title.equals(special.getTitle())) {
-					base.set("title", title);
+					updateModel.param("title", title);
 				}
 				
 				if (StringUtils.isNotBlank(introduce) && !introduce.equals(special.getIntroduce())) {
-					base.set("introduce", introduce);
+					updateModel.param("introduce", introduce);
 				}
 				// 封面是否修改
 				
 				if (StringUtils.isNotBlank(cover)) {
 					String cover_key = cover;
-					String filePath = WebConst.getWebRootPath() + cover;
-					if (!cover.startsWith("http://") && FileUtil.isFile(filePath)) {
+					String filePath = Constant.WEB_ROOT + cover;
+					if (!cover.startsWith("http://") && FileKit.isFile(filePath)) {
 						//上传封面
 						fileService.upload(cover_key, filePath);
 						//删除原有文件
 						fileService.delete(special.getCover());
 					}
-					base.set("cover", cover_key);
+					updateModel.param("cover", cover_key);
 				}
 				if(null != is_fine){
-					base.set("is_fine", is_fine);
+					updateModel.param("is_fine", is_fine);
 				}
-				base.set("last_time", DateUtil.getCurrentTime());
-				base.eq("id", sid);
+				updateModel.param("last_time", DateKit.getUnixTimeByDate(new Date()));
+				
 				try {
-					count = Special.db.update(base.getSQL(), base.getParams());
-				} catch (UpdateException e) {
+					count = updateModel.where("sid", sid).executeAndCommit();
+				} catch (Exception e) {
 					logger.warn("更新专辑失败：" + e.getMessage());
 					count = 0;
 				}
@@ -159,14 +168,15 @@ public class SpecialServiceImpl implements SpecialService {
 
 	@Override
 	public List<Map<String, Object>> getList(Integer uid, Integer type, Integer is_fine, String title, Integer status, String order) {
-		SqlBase base = SqlBase.select("select t.* from t_special t");
-		base.eq("uid", uid).eq("type", type).eq("is_fine", is_fine).likeLeft("title", title).eq("status", status).order(order);
-		List<Special> list = Special.db.findList(base.getSQL(), base.getParams());
+		List<Special> list = 
+				model.select().where("uid", uid).where("type", type)
+				.where("is_fine", is_fine).like("title", "%" + title)
+				.where("status", status).orderBy(order).fetchList();
 		return this.getSpecialMapList(list);
 	}
 
 	private List<Map<String, Object>> getSpecialMapList(List<Special> list) {
-		List<Map<String, Object>> mapList = CollectionUtil.newArrayList();
+		List<Map<String, Object>> mapList = CollectionKit.newArrayList();
 		for (int i = 0, len = list.size(); i < len; i++) {
 			Special special = list.get(i);
 			if (null != special) {
@@ -179,9 +189,9 @@ public class SpecialServiceImpl implements SpecialService {
 	private Page<Special> getPageList(Integer uid, Integer type, Integer is_fine,
 			String title, Integer status, Integer page,
 			Integer pageSize, String order) {
-		SqlBase base = SqlBase.select("select t.* from t_special t");
-		base.eq("uid", uid).eq("type", type).eq("is_fine", is_fine).likeLeft("title", title).eq("status", status).order(order);
-		return Special.db.findListPage(page, pageSize, base.getSQL(), base.getParams());
+		return model.select().where("uid", uid).where("type", type)
+				.where("is_fine", is_fine).like("title", "%" + title)
+				.where("status", status).orderBy(order).fetchPage(page, pageSize);
 	}
 
 	@Override
@@ -204,11 +214,8 @@ public class SpecialServiceImpl implements SpecialService {
 		int count = 0;
 		if (null != sid) {
 			try {
-				SqlBase base = SqlBase.update("update t_special");
-				base.set("status", 0).eq("id", sid);
-				count = Special.db.update(base.getSQL(), base.getParams());
-				//Special.db.delete("delete from t_special where id = ?", sid);
-			} catch (UpdateException e) {
+				count = model.update().param("status", 0).where("id", sid).executeAndCommit();
+			} catch (Exception e) {
 				logger.warn("删除专辑失败：" + e.getMessage());
 				count = 0;
 			}
@@ -219,7 +226,7 @@ public class SpecialServiceImpl implements SpecialService {
 	@Override
 	public int hit(Integer sid) {
 		if (null != sid) {
-			return Special.db.update("update t_special hit = (hit+1) where id = ?", sid);
+			return model.update().param("hit", "(hit+1)").where("id", sid).executeAndCommit();
 		}
 		return 0;
 	}
@@ -228,10 +235,8 @@ public class SpecialServiceImpl implements SpecialService {
 	public boolean enable(Integer sid, Integer status) {
 		if (null != sid) {
 			try {
-				SqlBase base = SqlBase.update("update t_special");
-				base.set("status", status).eq("id", sid);
-				return Special.db.update(base.getSQL(), base.getParams()) > 0;
-			} catch (UpdateException e) {
+				return model.update().param("status", status).where("id", sid).executeAndCommit() > 0;
+			} catch (Exception e) {
 				logger.warn("停用启用专辑失败：" + e.getMessage());
 				return false;
 			}

@@ -2,14 +2,16 @@ package blade.fm.route.admin;
 
 import java.util.List;
 
+import blade.annotation.Inject;
+import blade.annotation.Path;
+import blade.annotation.Route;
 import blade.fm.model.Mcat;
-import blade.fm.route.BaseController;
+import blade.fm.route.BaseRoute;
 import blade.fm.service.McatService;
-import blade.fm.util.WebConst;
+import blade.servlet.Request;
+import blade.servlet.Response;
 
-import org.unique.ioc.annotation.Autowired;
-import org.unique.web.annotation.Action;
-import org.unique.web.annotation.Controller;
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * 分类管理
@@ -17,40 +19,40 @@ import org.unique.web.annotation.Controller;
  * @date:2014年10月11日
  * @version:1.0
  */
-@Controller("/admin/mcat")
-public class McatController extends BaseController {
+@Path("/admin/mcat")
+public class McatController extends BaseRoute {
 
-	@Autowired
+	@Inject
 	private McatService mcatService;
 
 	/**
 	 * 分类列表
 	 */
-	@Action
-	public void index() {
+	@Route("index")
+	public String index(Request request) {
 		List<Mcat> mcatList = mcatService.getList(null);
-		r.setAttr("mcatList", mcatList);
-		r.render("/admin/mcat");
+		request.attribute("mcatList", mcatList);
+		return "/admin/mcat";
 	}
 
 	/**
 	 * 保存分类
 	 */
-	@Action
-	public void save() {
-		Integer id = r.getParaToInt("id");
-		String name = r.getPara("name");
+	@Route("save")
+	public void save(Request request, Response response) {
+		Integer id = request.queryToInt("id");
+		String name = request.query("name");
 		boolean flag = false;
 		if (null != id) {
 			flag = mcatService.update(id, name, null);
 		} else {
 			flag = mcatService.save(name);
 		}
-		if (flag) {
-			r.renderText(WebConst.MSG_SUCCESS);
-		} else {
-			r.renderText(WebConst.MSG_FAILURE);
-		}
+		
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("status", flag);
+		response.json(jsonObject.toJSONString());
+		
 	}
 
 }
