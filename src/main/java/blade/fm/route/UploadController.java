@@ -7,34 +7,32 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import blade.fm.service.HashService;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.util.Streams;
-import org.apache.log4j.Logger;
-import org.json.JSONException;
-import org.unique.common.tools.CollectionUtil;
-import org.unique.common.tools.DateUtil;
-import org.unique.common.tools.FileUtil;
-import org.unique.common.tools.StringUtils;
-import org.unique.ioc.annotation.Autowired;
-import org.unique.web.annotation.Action;
-import org.unique.web.annotation.Controller;
-import org.unique.web.core.Const;
-import org.unique.web.core.R;
 
-import com.baidu.ueditor.ActionEnter;
+import blade.Blade;
+import blade.BladeWebContext;
+import blade.annotation.Inject;
+import blade.annotation.Path;
+import blade.annotation.Route;
+import blade.fm.service.HashService;
+import blade.kit.CollectionKit;
+import blade.kit.DateKit;
+import blade.kit.FileKit;
+import blade.kit.StringKit;
+import blade.kit.log.Logger;
+import blade.servlet.Request;
+import blade.servlet.Response;
+
+import com.alibaba.fastjson.JSON;
 
 /**
  * 文件上传
@@ -42,8 +40,8 @@ import com.baidu.ueditor.ActionEnter;
  * @date:2014年8月19日
  * @version:1.0
  */
-@Controller("/upload")
-public class UploadController extends BaseController {
+@Path("/upload")
+public class UploadController extends BaseRoute {
 
 	private Logger logger = Logger.getLogger(UploadController.class);
 	private static final int BUFFER_SIZE = 100 * 1024;
@@ -54,21 +52,19 @@ public class UploadController extends BaseController {
 	private String videoPath;
 	private String filePath;
 	private String domainBase;
-	private HttpServletRequest request;
-	private HttpServletResponse response;
-	@Autowired
+	private Request request;
+	@Inject
 	private HashService hashService;
 
 	private String rootDir;
-	private String uplodDir = Const.CONST_MAP.get("unique.web.upload.path").toString();
+	private String uplodDir = Blade.webRoot() + "/upload";
 	private Integer uid = 1;
 
 	public void init(){
-		request = r.getRequest();
-		response = r.getResponse();
+		request = BladeWebContext.request();
 		if (null == rootDir) {
-			rootDir = request.getServletContext().getRealPath("/");
-			this.uid = (null == super.uid) ? 1 : super.uid;
+			rootDir = request.servletPath();
+			this.uid = 1;
 			tempPath = rootDir + uplodDir + File.separator + "temp";
 			imagePath = rootDir + uplodDir + File.separator + "images" + File.separator + this.uid;
 			mp3Path = rootDir + uplodDir + File.separator + "mp3" + File.separator + this.uid;
@@ -76,9 +72,8 @@ public class UploadController extends BaseController {
 			filePath = rootDir + uplodDir + File.separator + "files" + File.separator + this.uid;
 		}
 		if (null == domainBase) {
-			String ctx = request.getContextPath();
-			domainBase = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + ctx
-					+ "/";
+			String ctx = request.contextPath();
+			domainBase = request.scheme() + "://" + request.servletRequest().getServerName() + ":" + request.port() + ctx + "/";
 		}
 	}
 
@@ -86,55 +81,55 @@ public class UploadController extends BaseController {
 	 * 上传临时文件
 	 * @throws Exception 
 	 */
-	@Action
-	public void temp(R r) throws Exception {
+	@Route("temp")
+	public void temp(Response response) throws Exception {
 		init();
 		savePath = tempPath;
-		fileupload(savePath, r);
+		fileupload(savePath, response);
 	}
 
 	/**
 	 * 上传用户目录文件
 	 * @throws Exception 
 	 */
-	@Action
-	public void file(R r) throws Exception {
+	@Route("file")
+	public void file(Response response) throws Exception {
 		init();
 		savePath = filePath;
-		fileupload(savePath, r);
+		fileupload(savePath, response);
 	}
 
 	/**
 	 * 上传图片文件
 	 * @throws Exception 
 	 */
-	@Action("file/pic")
-	public void pic(R r) throws Exception {
+	@Route("file/pic")
+	public void pic(Response response) throws Exception {
 		init();
 		savePath = imagePath;
-		fileupload(savePath, r);
+		fileupload(savePath, response);
 	}
 
 	/**
 	 * 上传音乐文件
 	 * @throws Exception
 	 */
-	@Action("file/mp3")
-	public void mp3(R r) throws Exception {
+	@Route("file/mp3")
+	public void mp3(Response response) throws Exception {
 		init();
 		savePath = mp3Path;
-		fileupload(savePath, r);
+		fileupload(savePath, response);
 	}
 
 	/**
 	 * 上传视频文件
 	 * @throws Exception
 	 */
-	@Action("file/video")
-	public void video(R r) throws Exception {
+	@Route("file/video")
+	public void video(Response response) throws Exception {
 		init();
 		savePath = videoPath;
-		fileupload(savePath, r);
+		fileupload(savePath, response);
 	}
 
 	private void appendFile(InputStream in, File destFile) {
@@ -173,9 +168,9 @@ public class UploadController extends BaseController {
 	 * 文件上传处理
 	 * @throws Exception 
 	 */
-	private void fileupload(String savePath, R r) throws Exception {
+	private void fileupload(String savePath, Response r) throws Exception {
 		try {
-			boolean isMultipart = ServletFileUpload.isMultipartContent(request);
+			boolean isMultipart = ServletFileUpload.isMultipartContent(request.servletRequest());
 			if (isMultipart) {
 
 				String fileName = "";
@@ -197,7 +192,7 @@ public class UploadController extends BaseController {
 				upload.setHeaderEncoding("UTF-8");
 
 				try {
-					List<FileItem> fileList = upload.parseRequest(request);
+					List<FileItem> fileList = upload.parseRequest(request.servletRequest());
 					Iterator<FileItem> it = fileList.iterator();
 					while (it.hasNext()) {
 						FileItem item = it.next();
@@ -238,7 +233,7 @@ public class UploadController extends BaseController {
 
 								Map<String, Object> fileInfo = this.getResponse(saveFilePath, fileName, item.getSize());
 								logger.info("非分块上传结果：" + fileInfo);
-								r.renderJson(fileInfo);
+								r.json(JSON.toJSONString(fileInfo));
 								return;
 							}
 
@@ -253,7 +248,7 @@ public class UploadController extends BaseController {
 									Map<String, Object> fileInfo = this.getResponse(saveFilePath, fileName,
 											item.getSize());
 									logger.info("分块上传结果：" + fileInfo);
-									r.renderJson(fileInfo);
+									r.json(JSON.toJSONString(fileInfo));
 								}
 							} else {
 								logger.info("还剩[" + (chunks - 1 - chunk) + "]个块文件");
@@ -278,7 +273,7 @@ public class UploadController extends BaseController {
 	 * @return
 	 */
 	private Map<String, Object> getResponse(String saveFilePath, String fileName, Long length) {
-		Map<String, Object> fileInfo = CollectionUtil.newHashMap();
+		Map<String, Object> fileInfo = CollectionKit.newHashMap();
 		fileInfo.put("save_path", saveFilePath);
 		fileInfo.put("save_name", saveFilePath.substring(saveFilePath.lastIndexOf(".") + 1));
 		fileInfo.put("file_name", fileName);
@@ -296,19 +291,19 @@ public class UploadController extends BaseController {
 	 */
 	private String getFileName(String fileName) {
 		// 扩展名格式：  
-		String extName = FileUtil.getExtension(fileName);
+		String extName = FileKit.getExtension(fileName);
 
 		// 生成文件名：  
-		String dateStr = DateUtil.convertIntToDatePattern(DateUtil.getCurrentTime(), "yyyyMMddHHmmss");
-		String random = StringUtils.randomNum(5);
+		String dateStr = DateKit.dateFormat(new Date(), "yyyyMMddHHmmss");
+		String random = StringKit.random(5);
 		String saveFilePath = savePath + File.separator + dateStr + random + extName;
 		return saveFilePath;
 	}
-
-	public void ueditor(R r) throws UnsupportedEncodingException, JSONException {
+/*
+	public void ueditor(Request request) throws UnsupportedEncodingException, JSONException {
 		request.setCharacterEncoding("utf-8");
 		response.setHeader("Content-Type", "text/html");
 		String rootPath = request.getServletContext().getRealPath("/");
 		r.renderText(new ActionEnter(request, rootPath).exec());
-	}
+	}*/
 }

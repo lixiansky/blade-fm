@@ -2,16 +2,18 @@ package blade.fm.route.admin;
 
 import java.util.Map;
 
-import blade.fm.route.BaseController;
-import blade.fm.service.FocusService;
-import blade.fm.util.WebConst;
-
 import org.apache.commons.lang3.StringUtils;
-import org.unique.ioc.annotation.Autowired;
-import org.unique.plugin.dao.Page;
-import org.unique.web.annotation.Action;
-import org.unique.web.annotation.Controller;
-import org.unique.web.core.R;
+
+import blade.annotation.Inject;
+import blade.annotation.Path;
+import blade.annotation.Route;
+import blade.fm.route.BaseRoute;
+import blade.fm.service.FocusService;
+import blade.plugin.sql2o.Page;
+import blade.servlet.Request;
+import blade.servlet.Response;
+
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * 焦点图管理
@@ -19,49 +21,50 @@ import org.unique.web.core.R;
  * @date:2014年10月11日
  * @version:1.0
  */
-@Controller
-public class FocusController extends BaseController {
+@Path
+public class FocusController extends BaseRoute {
 
-	@Autowired
+	@Inject
 	private FocusService focusService;
 
 	/**
 	 * 焦点图列表
 	 */
-	@Action("/admin/focus")
-	public void index(R r) {
+	@Route("/admin/focus")
+	public String index(Request request) {
 		Page<Map<String, Object>> focusPage = focusService.getPageMapList(null, null, null, page, pageSize, "create_time desc");
-		r.setAttr("focusPage", focusPage);
-		r.render("/admin/focus");
+		request.attribute("focusPage", focusPage);
+		return "/admin/focus";
 	}
 
 
 	/**
 	 * 编辑焦点图
 	 */
-	@Action("/admin/focus/@id")
-	public void edit_focus(Integer id) {
+	@Route("/admin/focus/:id")
+	public String edit_focus(Request request) {
+		Integer id = request.pathParamToInt("id");
 		// 编辑
 		if (null != id) {
 			Map<String, Object> focusMap = focusService.getMap(null, id);
-			r.setAttr("focus", focusMap);
+			request.attribute("focus", focusMap);
 		}
-		r.render("/admin/edit_focus");
+		return "/admin/edit_focus";
 	}
 
 	/**
 	 * 保存焦点图
 	 */
-	@Action
-	public void save(R r) {
-		String step = r.getPara("step");
+	@Route("save")
+	public String save(Request request, Response response) {
+		String step = request.query("step");
 		if (StringUtils.isNoneBlank(step) && step.equals("submit")) {
-			Integer id = r.getParaToInt("id");
-			Integer type = r.getParaToInt("type");
-			String title = r.getPara("title");
-			String introduce = r.getPara("introduce");
-			String pic = r.getPara("pic");
-			Integer status = r.getParaToInt("status");
+			Integer id = request.queryToInt("id");
+			Integer type = request.queryToInt("type");
+			String title = request.query("title");
+			String introduce = request.query("introduce");
+			String pic = request.query("pic");
+			Integer status = request.queryToInt("status");
 			boolean flag = false;
 			uid = 1;
 			if (null != id) {
@@ -69,14 +72,14 @@ public class FocusController extends BaseController {
 			} else {
 				flag = focusService.save(title, introduce, pic, type);
 			}
-			if (flag) {
-				r.renderText(WebConst.MSG_SUCCESS);
-			} else {
-				r.renderText(WebConst.MSG_ERROR);
-			}
-			return;
+			
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status", flag);
+			response.json(jsonObject.toJSONString());
+			
+			return null;
 		}
-		r.render("/admin/edit_focus");
+		return "/admin/edit_focus";
 	}
 	
 }

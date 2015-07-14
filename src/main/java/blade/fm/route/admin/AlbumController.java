@@ -2,16 +2,18 @@ package blade.fm.route.admin;
 
 import java.util.Map;
 
-import blade.fm.route.BaseController;
-import blade.fm.service.AlbumService;
-import blade.fm.util.WebConst;
+import org.apache.commons.lang3.StringUtils;
 
-import org.unique.common.tools.StringUtils;
-import org.unique.ioc.annotation.Autowired;
-import org.unique.plugin.dao.Page;
-import org.unique.web.annotation.Action;
-import org.unique.web.annotation.Controller;
-import org.unique.web.core.R;
+import blade.annotation.Inject;
+import blade.annotation.Path;
+import blade.annotation.Route;
+import blade.fm.route.BaseRoute;
+import blade.fm.service.AlbumService;
+import blade.plugin.sql2o.Page;
+import blade.servlet.Request;
+import blade.servlet.Response;
+
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * 图库管理
@@ -19,64 +21,66 @@ import org.unique.web.core.R;
  * @date:2014年10月11日
  * @version:1.0
  */
-@Controller("/admin/pic")
-public class AlbumController extends BaseController {
+@Path("/admin/pic")
+public class AlbumController extends BaseRoute {
 	
-	@Autowired
+	@Inject
 	private AlbumService pictureService;
 	
 	/**
 	 * 图库列表
 	 */
-	@Action
-	public void index(R r) {
-		String title = r.getPara("title");
-		Integer status = r.getParaToInt("status");
+	@Route("index")
+	public String index(Request request, Response response) {
+		String title = request.query("title");
+		Integer status = request.queryToInt("status");
 		Page<Map<String, Object>> picPage = pictureService.getPageMapList(uid, title, status, page, pageSize, "id desc");
-		r.setAttr("picPage", picPage);
-		r.render("/admin/picture");
+		request.attribute("picPage", picPage);
+		return "/admin/picture";
 	}
 	
 	/**
 	 * 保存图库
 	 */
-	@Action
-	public void save(R r){
-		String step = r.getPara("step");
+	@Route("save")
+	public String save(Request request, Response response){
+		
+		String step = request.query("step");
+		
 		if(StringUtils.isNotBlank(step) && step.equals("submit")){
-			Integer id = r.getParaToInt("id");
-			String title = r.getPara("title");
-			String introduce = r.getPara("introduce");
-			String pics = r.getPara("pics");
-			String cover = r.getPara("cover");
-			Integer status = r.getParaToInt("status");
+			Integer id = request.queryToInt("id");
+			String title = request.query("title");
+			String introduce = request.query("introduce");
+			String pics = request.query("pics");
+			String cover = request.query("cover");
+			Integer status = request.queryToInt("status");
 			boolean flag = false;
 			if(null != id){
 				flag = pictureService.update(id, title, introduce, cover, pics, status);
 			} else{
 				flag = pictureService.save(uid, title, introduce, null, pics, status);
 			}
-			if(flag){
-				r.renderText(WebConst.MSG_SUCCESS);
-			} else{
-				r.renderText(WebConst.MSG_FAILURE);
-			}
-			return;
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status", flag);
+			response.json(jsonObject.toJSONString());
+			
+			return null;
 		}
-		r.render("/admin/edit_pic");
+		return "/admin/edit_pic";
 	}
 	
 	/**
 	 * 显示图库
 	 */
-	@Action("/admin/pic/@id")
-	public void edit(Integer id, R r) {
+	@Route("/admin/pic/:id")
+	public String edit(Request request) {
+		Integer id = request.pathParamToInt("id");
 		// 编辑
 		if (null != id) {
 			Map<String, Object> picture = pictureService.getMap(null, id);
-			r.setAttr("picture", picture);
+			request.attribute("picture", picture);
 		}
-		r.render("/admin/edit_pic");
+		return "/admin/edit_pic";
 	}
 	
 }
