@@ -33,6 +33,16 @@
 			<artifactId>blade-sql2o</artifactId>
 			<version>1.2.2</version>
 		</dependency>
+		<dependency>
+			<groupId>com.bladejava</groupId>
+			<artifactId>blade-cache</artifactId>
+			<version>1.2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.35</version>
+		</dependency>
 
 		<!-- servlet -->
 		<dependency>
@@ -48,7 +58,7 @@
 			<artifactId>qiniu-java-sdk</artifactId>
 			<version>7.0.3</version>
 		</dependency>
-
+		
 		<!-- commons-io -->
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -64,26 +74,11 @@
 		</dependency>
 
 		<!-- commons-collections -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>
 			<version>3.2.1</version>
-		</dependency>
-
-
-		<!-- commons-dbutils -->
-		<dependency>
-			<groupId>commons-dbutils</groupId>
-			<artifactId>commons-dbutils</artifactId>
-			<version>1.5</version>
-		</dependency>
-
-		<!-- druid -->
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>druid</artifactId>
-			<version>1.0.6</version>
-		</dependency>
+		</dependency> -->
 
 		<!-- fastjson -->
 		<dependency>
@@ -98,31 +93,24 @@
 			<version>1.2.1</version>
 		</dependency>
 		
-		<dependency>
-		    <groupId>commons-codec</groupId>
-		    <artifactId>commons-codec</artifactId>
-		    <version>20041127.091804</version>
-		</dependency>
-
-		<!-- mysql conn -->
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.31</version>
-		</dependency>
-
-		<!-- jedis -->
-		<dependency>
-			<groupId>redis.clients</groupId>
-			<artifactId>jedis</artifactId>
-			<version>2.5.1</version>
-		</dependency>
-
 		<!-- patchca:S -->
 		<dependency>
 			<groupId>org.patchca</groupId>
 			<artifactId>patchca</artifactId>
 			<version>0.5.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-server</artifactId>
+			<version>${jetty.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-webapp</artifactId>
+			<version>${jetty.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
 	</dependencies>

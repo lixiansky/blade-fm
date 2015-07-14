@@ -14,7 +14,7 @@ public class App extends BladeApplication {
 	public void init() {
 		
 		// 设置路由、拦截器包所在包
-		Blade.routes("blade.fm.route", "blade.fm.route.admin", "blade.fm.route.front");
+		Blade.routes("blade.fm.route.*");
 		
 		Blade.interceptor("blade.fm.interceptor");
 		
@@ -22,14 +22,14 @@ public class App extends BladeApplication {
 		Blade.ioc("blade.fm.service.*");
 		
 		// 设置视图位置和默认后缀名称
-		Blade.view("/WEB-INF/views/", ".html");
+		Blade.view("/", ".html");
 		
 		// 设置静态目录
 		Blade.staticFolder("/assets/", "/upload/");
 		
 		// 设置模板引擎
 		BeetlRender beetlRender = new BeetlRender();
-
+		
 		Blade.viewEngin(beetlRender);
 		
 		// 配置数据库插件

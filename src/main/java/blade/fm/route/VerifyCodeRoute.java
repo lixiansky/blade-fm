@@ -4,9 +4,7 @@ import java.awt.Color;
 import java.io.IOException;
 import java.util.Random;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.patchca.color.ColorFactory;
 import org.patchca.filter.predefined.CurvesRippleFilterFactory;
@@ -20,6 +18,9 @@ import org.patchca.word.RandomWordFactory;
 
 import blade.annotation.Path;
 import blade.annotation.Route;
+import blade.servlet.Request;
+import blade.servlet.Response;
+import blade.servlet.Session;
 
 /**
  * patchca生成多彩验证码
@@ -57,33 +58,31 @@ public class VerifyCodeRoute {
 	}
 
 	@Route("verify_code")
-	public void crimg(HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	public void crimg(Request request, Response response) throws IOException {
+		
 		switch (random.nextInt(5)) {
-		case 0:
-			cs.setFilterFactory(new CurvesRippleFilterFactory(cs.getColorFactory()));
-			break;
-		case 1:
-			cs.setFilterFactory(new MarbleRippleFilterFactory());
-			break;
-		case 2:
-			cs.setFilterFactory(new DoubleRippleFilterFactory());
-			break;
-		case 3:
-			cs.setFilterFactory(new WobbleRippleFilterFactory());
-			break;
-		case 4:
-			cs.setFilterFactory(new DiffuseRippleFilterFactory());
-			break;
+			case 0:
+				cs.setFilterFactory(new CurvesRippleFilterFactory(cs.getColorFactory()));
+				break;
+			case 1:
+				cs.setFilterFactory(new MarbleRippleFilterFactory());
+				break;
+			case 2:
+				cs.setFilterFactory(new DoubleRippleFilterFactory());
+				break;
+			case 3:
+				cs.setFilterFactory(new WobbleRippleFilterFactory());
+				break;
+			case 4:
+				cs.setFilterFactory(new DiffuseRippleFilterFactory());
+				break;
 		}
-		HttpSession session = request.getSession(false);
-		if (session == null) {
-			session = request.getSession();
-		}
-		setResponseHeaders(response);
-		String token = EncoderHelper.getChallangeAndWriteImage(cs, "png", response.getOutputStream());
-		session.setAttribute("captchaToken", token);
-		System.out.println("当前的SessionID=" + session.getId() + "，验证码=" + token);
+		
+		Session session = request.session();
+		setResponseHeaders(response.servletResponse());
+		String token = EncoderHelper.getChallangeAndWriteImage(cs, "png", response.servletResponse().getOutputStream());
+		session.attribute("captchaToken", token);
+		System.out.println("当前的SessionID=" + session.id() + "，验证码=" + token);
 	}
 	
 	protected void setResponseHeaders(HttpServletResponse response) {
