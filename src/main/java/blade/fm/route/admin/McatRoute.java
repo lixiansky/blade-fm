@@ -20,7 +20,7 @@ import com.alibaba.fastjson.JSONObject;
  * @version:1.0
  */
 @Path("/admin/mcat")
-public class McatController extends BaseRoute {
+public class McatRoute extends BaseRoute {
 
 	@Inject
 	private McatService mcatService;

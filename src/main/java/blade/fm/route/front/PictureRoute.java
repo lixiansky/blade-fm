@@ -22,7 +22,7 @@ import blade.servlet.Response;
  * @version:1.0
  */
 @Path("/pictures")
-public class PictureController extends BaseRoute {
+public class PictureRoute extends BaseRoute {
 
 	@Inject
 	private AlbumService pictureService;

@@ -20,7 +20,7 @@ import blade.servlet.Response;
  * @version:1.0
  */
 @Path
-public class UserController extends BaseRoute {
+public class UserRoute extends BaseRoute {
 
 	@Inject
 	private UserService userService;

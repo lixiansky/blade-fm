@@ -24,7 +24,7 @@ import blade.servlet.Response;
  * @version:1.0
  */
 @Path
-public class RadioController extends BaseRoute {
+public class RadioRoute extends BaseRoute {
 
 	@Inject
 	private RadioService radioService;

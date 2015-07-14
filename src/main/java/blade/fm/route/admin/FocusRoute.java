@@ -22,7 +22,7 @@ import com.alibaba.fastjson.JSONObject;
  * @version:1.0
  */
 @Path
-public class FocusController extends BaseRoute {
+public class FocusRoute extends BaseRoute {
 
 	@Inject
 	private FocusService focusService;

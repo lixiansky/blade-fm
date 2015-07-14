@@ -22,7 +22,7 @@ import blade.servlet.Response;
  * @version:1.0
  */
 @Path
-public class SpecialController extends BaseRoute {
+public class SpecialRoute extends BaseRoute {
 
 	@Inject
 	private SpecialService specialService;

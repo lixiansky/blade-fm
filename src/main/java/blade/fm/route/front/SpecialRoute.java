@@ -17,7 +17,7 @@ import blade.plugin.sql2o.Page;
 import blade.servlet.Request;
 
 @Path("/special")
-public class SpecialController extends BaseRoute {
+public class SpecialRoute extends BaseRoute {
 
 	@Inject
 	private UserService userService;

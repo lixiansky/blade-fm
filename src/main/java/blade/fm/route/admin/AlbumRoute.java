@@ -22,7 +22,7 @@ import com.alibaba.fastjson.JSONObject;
  * @version:1.0
  */
 @Path("/admin/pic")
-public class AlbumController extends BaseRoute {
+public class AlbumRoute extends BaseRoute {
 	
 	@Inject
 	private AlbumService pictureService;

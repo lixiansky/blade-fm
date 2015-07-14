@@ -2,13 +2,12 @@ package blade.fm.service.impl;
 
 import java.io.File;
 
-import org.apache.log4j.Logger;
-
 import blade.annotation.Component;
 import blade.fm.QiniuApi;
 import blade.fm.service.FileService;
 import blade.kit.FileKit;
 import blade.kit.StringKit;
+import blade.kit.log.Logger;
 
 @Component
 public class FileServiceImpl implements FileService {

@@ -23,14 +23,10 @@ import blade.servlet.Response;
  * @version:1.0
  */
 @Path("/music")
-public class MusicController extends BaseRoute {
+public class MusicRoute extends BaseRoute {
 	
 	@Inject
 	private MusicService musicService;
-	
-	public MusicController() {
-		System.out.println("aaaaaa");
-	}
 	
 	@Route("index")
 	public String index(Request request, Response response){

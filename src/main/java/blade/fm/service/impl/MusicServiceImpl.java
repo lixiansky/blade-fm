@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 
 import blade.annotation.Component;
 import blade.annotation.Inject;
@@ -24,6 +23,7 @@ import blade.kit.CollectionKit;
 import blade.kit.DateKit;
 import blade.kit.FileKit;
 import blade.kit.StringKit;
+import blade.kit.log.Logger;
 import blade.plugin.sql2o.Page;
 
 @Component

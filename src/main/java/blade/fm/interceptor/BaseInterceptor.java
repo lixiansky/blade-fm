@@ -2,13 +2,11 @@ package blade.fm.interceptor;
 
 import java.util.Map;
 
-import blade.fm.Constant;
-import blade.fm.model.User;
-import blade.fm.service.SettingService;
-import blade.fm.service.impl.SettingServiceImpl;
 import blade.annotation.After;
 import blade.annotation.Before;
 import blade.annotation.Interceptor;
+import blade.fm.service.SettingService;
+import blade.fm.service.impl.SettingServiceImpl;
 import blade.kit.timw.TimwManager;
 import blade.kit.timw.TimwMonitor;
 import blade.servlet.Request;
@@ -44,7 +42,7 @@ public class BaseInterceptor {
 		request.attribute("setting", setting);
 		request.attribute("cdn", request.contextPath());
 		
-		User login_user = request.session().attribute(Constant.LOGIN_SESSION);
+//		User login_user = request.session().attribute(Constant.LOGIN_SESSION);
 		
 		// 未登录
 //		if(null == login_user && request.uri().indexOf("/admin") != -1){

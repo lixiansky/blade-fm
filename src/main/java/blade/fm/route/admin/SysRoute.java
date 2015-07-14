@@ -22,7 +22,7 @@ import com.alibaba.fastjson.JSONObject;
  * @version:1.0
  */
 @Path
-public class SysController extends BaseRoute {
+public class SysRoute extends BaseRoute {
 	
 	@Inject
 	private SettingService settingService;

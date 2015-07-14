@@ -26,7 +26,7 @@ import blade.servlet.Response;
  * @version:1.0
  */
 @Path
-public class MusicController extends BaseRoute {
+public class MusicRoute extends BaseRoute {
 
 	@Inject
 	private MusicService musicService;

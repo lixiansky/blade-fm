@@ -1,29 +1,13 @@
 package blade.fm.route.front;
 
-import java.io.IOException;
-
-import org.apache.commons.lang3.StringUtils;
-
 import blade.annotation.Inject;
 import blade.annotation.Path;
 import blade.annotation.Route;
-import blade.fm.Constant;
-import blade.fm.model.Open;
-import blade.fm.model.User;
 import blade.fm.route.BaseRoute;
 import blade.fm.service.OpenService;
 import blade.fm.service.UserService;
-import blade.kit.IpKit;
 import blade.kit.log.Logger;
 import blade.servlet.Request;
-import blade.servlet.Response;
-
-import com.qq.connect.QQConnectException;
-import com.qq.connect.api.OpenID;
-import com.qq.connect.api.qzone.UserInfo;
-import com.qq.connect.javabeans.AccessToken;
-import com.qq.connect.javabeans.qzone.UserInfoBean;
-import com.qq.connect.oauth.Oauth;
 
 /**
  * 前台首页
@@ -32,9 +16,9 @@ import com.qq.connect.oauth.Oauth;
  * @version:1.0
  */
 @Path("/")
-public class IndexController extends BaseRoute {
+public class IndexRoute extends BaseRoute {
 
-	private Logger logger = Logger.getLogger(IndexController.class);
+	private Logger logger = Logger.getLogger(IndexRoute.class);
 			
 	@Inject
 	private UserService userService;
@@ -54,21 +38,21 @@ public class IndexController extends BaseRoute {
 	/**
 	 * 用qq登录
 	 */
-	@Route("qq_login")
+	/*@Route("qq_login")
 	public void qq_login(Request request, Response response) {
 		try {
 			response.redirect(new Oauth().getAuthorizeURL(request.servletRequest()));
 		} catch (QQConnectException e) {
 			logger.warn(e.getMessage());
 		}
-	}
+	}*/
 
 	/**
 	 * 用qq登录回调
 	 * @throws IOException 
 	 * @throws ClientProtocolException 
 	 */
-	@Route("qq_callback")
+	/*@Route("qq_callback")
 	public void qq_callback(Request request, Response response) {
 		try {
 			AccessToken accessTokenObj = (new Oauth()).getAccessTokenByRequest(request.servletRequest());
@@ -110,12 +94,12 @@ public class IndexController extends BaseRoute {
 		} catch (QQConnectException e) {
 			logger.warn(e.getMessage());
 		}
-	}
+	}*/
 	
 	/**
 	 * 确认绑定qq
 	 */
-	@Route("save_bind_qq")
+	/*@Route("save_bind_qq")
 	public void save_bind_qq(Request request, Response response){
 		String openId = request.query("openid");
 		String email = request.query("email");
@@ -149,6 +133,6 @@ public class IndexController extends BaseRoute {
 			return;
 		}
 		response.text(Constant.MSG_ERROR);
-	}
+	}*/
 
 }

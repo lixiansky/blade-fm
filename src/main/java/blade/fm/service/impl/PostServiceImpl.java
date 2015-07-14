@@ -3,12 +3,11 @@ package blade.fm.service.impl;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
 import blade.annotation.Component;
 import blade.fm.model.Post;
 import blade.fm.service.PostService;
 import blade.kit.DateKit;
+import blade.kit.log.Logger;
 import blade.plugin.sql2o.Page;
 
 @Component

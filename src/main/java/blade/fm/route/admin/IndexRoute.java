@@ -22,7 +22,7 @@ import blade.servlet.Response;
  * @version:1.0
  */
 @Path("/admin")
-public class IndexController extends BaseRoute {
+public class IndexRoute extends BaseRoute {
 
 	@Inject
 	private UserService userService;

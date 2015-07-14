@@ -1,10 +1,9 @@
 package blade.fm.service.impl;
 
-import org.apache.log4j.Logger;
-
 import blade.annotation.Component;
 import blade.fm.model.Open;
 import blade.fm.service.OpenService;
+import blade.kit.log.Logger;
 
 @Component
 public class OpenServiceImpl implements OpenService {

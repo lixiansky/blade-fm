@@ -1,7 +1,5 @@
 package blade.fm;
 
-import javax.servlet.ServletContext;
-
 import blade.Blade;
 import blade.BladeApplication;
 import blade.kit.log.Logger;
@@ -16,7 +14,8 @@ public class App extends BladeApplication {
 	public void init() {
 		
 		// 设置路由、拦截器包所在包
-		Blade.routes("blade.fm.route.*");
+		Blade.routes("blade.fm.route", "blade.fm.route.admin", "blade.fm.route.front");
+		
 		Blade.interceptor("blade.fm.interceptor");
 		
 		// 设置要扫描的ioc包，可选
@@ -40,12 +39,6 @@ public class App extends BladeApplication {
 		sql2oPlugin.run();
 		
 	}
-	
-	@Override
-	public void contextInitialized(ServletContext servletContext) {
-		
-	}
-	
 	
 	public static void main(String[] args) {
 		Blade.run(App.class, 9000);
