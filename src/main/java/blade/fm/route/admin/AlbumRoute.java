@@ -10,6 +10,7 @@ import blade.annotation.Route;
 import blade.fm.route.BaseRoute;
 import blade.fm.service.AlbumService;
 import blade.plugin.sql2o.Page;
+import blade.render.ModelAndView;
 import blade.servlet.Request;
 import blade.servlet.Response;
 
@@ -31,7 +32,7 @@ public class AlbumRoute extends BaseRoute {
 	 * 图库列表
 	 */
 	@Route("index")
-	public String index(Request request, Response response) {
+	public ModelAndView index(Request request, Response response) {
 		String title = request.query("title");
 		Integer status = request.queryToInt("status");
 		Integer uid = getUid(request);
@@ -39,14 +40,14 @@ public class AlbumRoute extends BaseRoute {
 		
 		Page<Map<String, Object>> picPage = pictureService.getPageMapList(uid, title, status, page, pageSize, "id desc");
 		request.attribute("picPage", picPage);
-		return "/admin/picture";
+		return getAdminModelAndView("picture");
 	}
 	
 	/**
 	 * 保存图库
 	 */
 	@Route("save")
-	public String save(Request request, Response response){
+	public ModelAndView save(Request request, Response response){
 		
 		String step = request.query("step");
 		
@@ -72,21 +73,21 @@ public class AlbumRoute extends BaseRoute {
 			
 			return null;
 		}
-		return "/admin/edit_pic";
+		return getAdminModelAndView("edit_pic");
 	}
 	
 	/**
 	 * 显示图库
 	 */
 	@Route("/admin/pic/:id")
-	public String edit(Request request) {
+	public ModelAndView edit(Request request) {
 		Integer id = request.pathParamToInt("id");
 		// 编辑
 		if (null != id) {
 			Map<String, Object> picture = pictureService.getMap(null, id);
 			request.attribute("picture", picture);
 		}
-		return "/admin/edit_pic";
+		return getAdminModelAndView("edit_pic");
 	}
 	
 }

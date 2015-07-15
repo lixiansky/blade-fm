@@ -7,6 +7,7 @@ import blade.annotation.Route;
 import blade.fm.Constant;
 import blade.fm.route.BaseRoute;
 import blade.fm.service.UserService;
+import blade.render.ModelAndView;
 import blade.servlet.Request;
 import blade.servlet.Response;
 
@@ -26,7 +27,7 @@ public class IndexRoute extends BaseRoute {
 	 * 后台首页
 	 */
 	@Route("/")
-	public String home(Request request) {
+	public ModelAndView home(Request request) {
 		return index(request);
 	}
 	
@@ -34,8 +35,8 @@ public class IndexRoute extends BaseRoute {
 	 * 后台首页
 	 */
 	@Route("index")
-	public String index(Request request) {
-		return "index";
+	public ModelAndView index(Request request) {
+		return getAdminModelAndView("index");
 	}
 
 	/**

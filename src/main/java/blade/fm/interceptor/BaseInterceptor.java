@@ -50,6 +50,7 @@ public class BaseInterceptor {
 			response.redirect(Constant.ADMIN_LOGIN);
 			return;
 		}
+		request.attribute("login_user", login_user);
 	}
 	
 	@After("/*")

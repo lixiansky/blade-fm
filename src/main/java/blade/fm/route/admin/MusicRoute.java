@@ -14,6 +14,7 @@ import blade.fm.service.McatService;
 import blade.fm.service.MusicService;
 import blade.fm.service.SpecialService;
 import blade.plugin.sql2o.Page;
+import blade.render.ModelAndView;
 import blade.servlet.Request;
 import blade.servlet.Response;
 
@@ -39,7 +40,7 @@ public class MusicRoute extends BaseRoute {
 	 * 音乐列表
 	 */
 	@Route("/")
-	public String home(Request request) {
+	public ModelAndView home(Request request) {
 		return index(request);
 	}
 	
@@ -47,7 +48,8 @@ public class MusicRoute extends BaseRoute {
 	 * 音乐列表
 	 */
 	@Route("/index")
-	public String index(Request request) {
+	public ModelAndView index(Request request) {
+		ModelAndView modelAndView = getAdminModelAndView("music");
 		String singer = request.query("singer");
 		String song = request.query("song");
 		Integer uid = getUid(request);
@@ -55,15 +57,17 @@ public class MusicRoute extends BaseRoute {
 		
 		Page<Map<String, Object>> musicPage = musicService.getPageMapList(uid, singer, song, null, null, 1, page,
 				pageSize, "id desc");
-		request.attribute("pageMap", musicPage);
-		return "music";
+		
+		modelAndView.add("pageMap", musicPage);
+		return modelAndView;
 	}
 
 	/**
 	 * 显示音乐
 	 */
 	@Route("/:id")
-	public String edit_music(Request request) {
+	public ModelAndView edit_music(Request request) {
+		ModelAndView modelAndView = getAdminModelAndView("edit_music");
 		Integer mid = request.pathParamToInt("id");
 		// 编辑
 		if (null != mid) {
@@ -72,16 +76,18 @@ public class MusicRoute extends BaseRoute {
 		}
 		List<Mcat> mcatList = mcatService.getList(1);
 		List<Map<String, Object>> specialList = specialService.getList(null, 1, null, null, 1, "id desc");
-		request.attribute("catList", mcatList);
-		request.attribute("specialList", specialList);
-		return "/admin/edit_music";
+		
+		modelAndView.add("catList", mcatList);
+		modelAndView.add("specialList", specialList);
+		return modelAndView;
 	}
 
 	/**
 	 * 保存音乐
 	 */
 	@Route("/save")
-	public String save(Request request, Response response) {
+	public ModelAndView save(Request request, Response response) {
+		ModelAndView modelAndView = getAdminModelAndView("edit_music");
 		String step = request.query("step");
 		if (StringUtils.isNoneBlank(step)) {
 			Integer mid = request.queryToInt("mid");
@@ -110,9 +116,10 @@ public class MusicRoute extends BaseRoute {
 		
 		List<Mcat> mcatList = mcatService.getList(1);
 		List<Map<String, Object>> specialList = specialService.getList(null, 1, null, null, 1, "id desc");
-		request.attribute("catList", mcatList);
-		request.attribute("specialList", specialList);
-		return "/admin/edit_music";
+		
+		modelAndView.add("catList", mcatList);
+		modelAndView.add("specialList", specialList);
+		return modelAndView;
 	}
 
 	/**

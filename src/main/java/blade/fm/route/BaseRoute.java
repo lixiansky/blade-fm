@@ -22,12 +22,11 @@ public class BaseRoute {
 	protected final String FAILURE = "failure";
 	
 	public ModelAndView getFrontModelAndView(String view){
-		view = "/theme/" + view + ".html";
 		return new ModelAndView(view);
 	}
 	
 	public ModelAndView getAdminModelAndView(String view){
-		view = "/admin/" + view + ".html";
+		view = "/admin/" + view;
 		return new ModelAndView(view);
 	}
 	
