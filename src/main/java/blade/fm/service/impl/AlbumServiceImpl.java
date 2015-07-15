@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
+import blade.Blade;
 import blade.annotation.Component;
 import blade.annotation.Inject;
 import blade.fm.Constant;
@@ -111,7 +112,7 @@ public class AlbumServiceImpl implements AlbumService {
 				Map<String, Object> map = picList.get(i);
 				if(map.size() > 0){
 					String key = map.get("savepath").toString();
-					String filePath = Constant.WEB_ROOT + "/" + key;
+					String filePath = Blade.webRoot() + "/" + key;
 					if (FileKit.isFile(filePath)) {
 						//上传图片
 //						fileService.upload(key, filePath);
@@ -183,7 +184,7 @@ public class AlbumServiceImpl implements AlbumService {
 								upCount++;
 								newList.add(map);
 							} else{
-								String filePath = Constant.WEB_ROOT + "/" + key;
+								String filePath = Blade.webRoot() + "/" + key;
 								if (FileKit.isFile(filePath)) {
 									//上传图片
 //									fileService.upload(key, filePath);

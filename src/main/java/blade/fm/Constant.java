@@ -1,6 +1,10 @@
 
 package blade.fm;
 
+import blade.Blade;
+import blade.kit.FileKit;
+import blade.kit.StringKit;
+
 
 /**
  * 常量类
@@ -53,5 +57,10 @@ public class Constant {
 	
 	public static Long QQ_TOKEN_EXPIREIN = 0L;
 	
-	public static String WEB_ROOT = "";
+	public static boolean isFile(String filePath){
+		if(StringKit.isNotBlank(filePath)){
+			return FileKit.isFile(Blade.webRoot() + "/" + filePath);
+		}
+		return false;
+	}
  }

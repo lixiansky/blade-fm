@@ -52,7 +52,7 @@ public class QiniuApi {
 	}
 	
 	public static String getUrlByKey(String key){
-		return "7xke9w.media1.z0.glb.clouddn.com/" + key; 
+		return "http://7xke9w.media1.z0.glb.clouddn.com/" + key; 
 	}
 	
 	public static String delete(String key){

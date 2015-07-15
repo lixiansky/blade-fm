@@ -97,7 +97,7 @@ public class MusicRoute extends BaseRoute {
 			Integer uid = getUid(request);
 			
 			if (null != mid) {
-				flag = musicService.update(mid, singer, song, song_path, cover_path, introduce, cids, lrc, null, sid) > 0;
+				flag = musicService.update(mid, singer, song, song_path, cover_path, introduce, cids, lrc, null, sid);
 			} else {
 				flag = musicService.save(uid, singer, song, song_path, cover_path, introduce, cids, lrc, null, sid);
 			}

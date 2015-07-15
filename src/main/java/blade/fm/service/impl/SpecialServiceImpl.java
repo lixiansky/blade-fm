@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
+import blade.Blade;
 import blade.annotation.Component;
 import blade.annotation.Inject;
 import blade.fm.Constant;
@@ -96,7 +97,7 @@ public class SpecialServiceImpl implements SpecialService {
 		String cover_key = "";
 		if (StringUtils.isNotBlank(cover)) {
 			cover_key = cover;
-			String filePath = Constant.WEB_ROOT + cover;
+			String filePath = Blade.webRoot() + cover;
 			if (!cover.startsWith("http://") && FileKit.isFile(filePath)) {
 				//上传专辑封面
 				fileService.upload(cover_key, filePath);
@@ -141,7 +142,7 @@ public class SpecialServiceImpl implements SpecialService {
 				
 				if (StringUtils.isNotBlank(cover)) {
 					String cover_key = cover;
-					String filePath = Constant.WEB_ROOT + cover;
+					String filePath = Blade.webRoot() + cover;
 					if (!cover.startsWith("http://") && FileKit.isFile(filePath)) {
 						//上传封面
 						fileService.upload(cover_key, filePath);

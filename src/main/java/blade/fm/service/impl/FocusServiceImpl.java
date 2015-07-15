@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
+import blade.Blade;
 import blade.annotation.Component;
 import blade.annotation.Inject;
 import blade.fm.Constant;
@@ -63,7 +64,7 @@ public class FocusServiceImpl implements FocusService {
 		String key = "";
 		if (StringUtils.isNotBlank(pic)) {
 			key = pic;
-			String filePath = Constant.WEB_ROOT + "/" + pic;
+			String filePath = Blade.webRoot() + "/" + pic;
 			if (!pic.startsWith("http://") && FileKit.isFile(filePath)) {
 				//上传音乐
 				fileService.upload(key, filePath);
@@ -106,7 +107,7 @@ public class FocusServiceImpl implements FocusService {
 				// 幻灯片是否修改
 				if (StringUtils.isNotBlank(pic)) {
 					pic_key = pic;
-					String filePath = Constant.WEB_ROOT + "/" + pic;
+					String filePath = Blade.webRoot() + "/" + pic;
 					if (!pic.startsWith("http://") && FileKit.isFile(filePath)) {
 						//上传封面
 						fileService.upload(pic_key, filePath);

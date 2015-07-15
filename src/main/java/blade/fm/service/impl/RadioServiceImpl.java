@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
+import blade.Blade;
 import blade.annotation.Component;
 import blade.annotation.Inject;
 import blade.fm.Constant;
@@ -88,7 +89,7 @@ public class RadioServiceImpl implements RadioService {
 		String url_key = "";
 		if (StringUtils.isNotBlank(url)) {
 			url_key = url;
-			String filePath = Constant.WEB_ROOT + url;
+			String filePath = Blade.webRoot() + url;
 			if (!url.startsWith("http://") && FileKit.isFile(filePath)) {
 				//上传radio
 				fileService.upload(url_key, filePath);
@@ -122,7 +123,7 @@ public class RadioServiceImpl implements RadioService {
 			//判断音乐文件是否修改
 			if (StringUtils.isNotBlank(url)) {
 				url_key = url;
-				String filePath = Constant.WEB_ROOT + url;
+				String filePath = Blade.webRoot() + url;
 				if (!url.startsWith("http://") && FileKit.isFile(filePath)) {
 					//上传电台文件
 					fileService.upload(url_key, filePath);

@@ -53,7 +53,7 @@ public interface MusicService {
 	 * @param cids
 	 * @return
 	 */
-	int update(Integer id, String singer, String song, String song_path, String cover_path, String introduce,
+	boolean update(Integer id, String singer, String song, String song_path, String cover_path, String introduce,
 			String cids, String lrc, String tags, Integer sid);
 	
 	/**

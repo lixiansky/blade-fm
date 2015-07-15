@@ -3,10 +3,11 @@ package blade.fm.route.admin;
 import java.io.File;
 import java.util.Map;
 
-import blade.BladeWebContext;
+import blade.Blade;
 import blade.annotation.Inject;
 import blade.annotation.Path;
 import blade.annotation.Route;
+import blade.cache.CacheManager;
 import blade.fm.Constant;
 import blade.fm.route.BaseRoute;
 import blade.fm.service.SettingService;
@@ -65,11 +66,25 @@ public class SysRoute extends BaseRoute {
 	}
 
 	/**
-	 * 清空缓存
+	 * 清空程序缓存
 	 */
 	@Route("/admin/sys/cleanCache")
 	public void cleanCache(Request request, Response response) {
-		String temp = BladeWebContext.servletContext().getRealPath("/") + Constant.UPLOAD_FOLDER + File.separator + "temp" + File.separator;
+		
+		CacheManager cm = CacheManager.getInstance();
+		cm.removeAll();
+		
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("status", true);
+		response.json(jsonObject.toJSONString());
+	}
+	
+	/**
+	 * 清空临时目录
+	 */
+	@Route("/admin/sys/cleanTemp")
+	public void cleanTemp(Request request, Response response) {
+		String temp = Blade.webRoot() + File.separator + Constant.UPLOAD_FOLDER + File.separator + "temp" + File.separator;
 		File tempDir = new File(temp);
 		if (tempDir.isDirectory()) {
 			File[] files = tempDir.listFiles();
@@ -77,10 +92,10 @@ public class SysRoute extends BaseRoute {
 				f.delete();
 			}
 		}
+		
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("status", true);
 		response.json(jsonObject.toJSONString());
 	}
-	
 	
 }

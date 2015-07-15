@@ -7,9 +7,9 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
+import blade.Blade;
 import blade.annotation.Component;
 import blade.annotation.Inject;
-import blade.fm.Constant;
 import blade.fm.QiniuApi;
 import blade.fm.model.Mcat;
 import blade.fm.model.Music;
@@ -24,6 +24,7 @@ import blade.kit.DateKit;
 import blade.kit.FileKit;
 import blade.kit.StringKit;
 import blade.kit.log.Logger;
+import blade.plugin.sql2o.Model;
 import blade.plugin.sql2o.Page;
 
 @Component
@@ -54,7 +55,7 @@ public class MusicServiceImpl implements MusicService {
 		String song_key = "", cover_key = "";
 		if (StringKit.isNotBlank(song_path)) {
 			song_key = song_path;
-			String filePath = Constant.WEB_ROOT + "/" + song_path;
+			String filePath = Blade.webRoot() + "/" + song_path;
 			if (!song_path.startsWith("http://") && FileKit.isFile(filePath)) {
 				//上传音乐
 				fileService.upload(song_key, filePath);
@@ -63,7 +64,7 @@ public class MusicServiceImpl implements MusicService {
 
 		if (StringKit.isNotBlank(cover_path)) {
 			cover_key = cover_path;
-			String filePath = Constant.WEB_ROOT + "/" + cover_path;
+			String filePath = Blade.webRoot() + "/" + cover_path;
 			if (!cover_path.startsWith("http://") && FileKit.isFile(filePath)) {
 				//上传封面
 				fileService.upload(cover_key, filePath);
@@ -166,7 +167,7 @@ public class MusicServiceImpl implements MusicService {
 	}
 
 	@Override
-	public int update(Integer id, String singer, String song, String song_path, String cover_path, String introduce,
+	public boolean update(Integer id, String singer, String song, String song_path, String cover_path, String introduce,
 			String cids, String lrc, String tags, Integer sid) {
 		int count = 0;
 		if (null != id) {
@@ -174,84 +175,75 @@ public class MusicServiceImpl implements MusicService {
 			Music music = this.get(id);
 			if (null != music) {
 				
-				String songStr = null;
-				String singerStr = null;
+				Model updateModel = model.update();
 				
 				//判断是否修改歌名
 				if (StringUtils.isNotBlank(song) && !song.equals(music.getSong())) {
-					songStr = song;
+					updateModel.param("song", song);
 				}
 				//判断是否修改歌手
 				if (StringUtils.isNotBlank(singer) && !singer.equals(music.getSinger())) {
-					singerStr = singer;
+					updateModel.param("singer", singer);
 				}
 				
 				String song_key = "", cover_key = "";
 				//判断音乐文件是否修改
 				if (StringUtils.isNotBlank(song_path) && !song_path.equals(music.getSong_path())) {
 					song_key = song_path;
-					String filePath = Constant.WEB_ROOT + song_path;
+					String filePath = Blade.webRoot() + "/" + song_path;
 					if (!song_path.startsWith("http://") && FileKit.isFile(filePath)) {
 						//上传封面
 						fileService.upload(song_key, filePath);
 						//删除原有文件
 						fileService.delete(music.getSong_path());
+						
+						updateModel.param("song_path", song_key);
+						
 					}
 				}
 				
 				//判断音乐封面是否修改
 				if (StringUtils.isNotBlank(cover_path) && !cover_path.equals(music.getCover_path())) {
 					cover_key = cover_path;
-					String filePath = Constant.WEB_ROOT +  cover_path;
+					String filePath = Blade.webRoot() + "/" + song_path;
 					if (!cover_path.startsWith("http://") && FileKit.isFile(filePath)) {
 						//上传封面
 						fileService.upload(cover_key, filePath);
 						//删除原有文件
 						fileService.delete(music.getCover_path());
+						
+						updateModel.param("cover_path", cover_key);
 					}
 				}
 				
-				String introduceStr=null;
-				String cidsStr=null;
-				String tagsStr=null;
-				String lrcStr=null;
 				//是否修改描述
 				if (StringUtils.isNotBlank(introduce) && !introduce.equals(music.getIntroduce())) {
-					introduceStr = introduce;
+					updateModel.param("introduce", introduce);
 				}
 				
 				//是否修改分类
 				if (StringUtils.isNotBlank(cids) && !cids.equals(music.getCids())) {
-					cidsStr = cids;
+					updateModel.param("cids", cids);
 				}
 				
 				//是否修改tags
 				if (StringUtils.isNotBlank(tags) && !tags.equals(music.getTags())) {
-					tagsStr = tags;
+					updateModel.param("tags", tags);
 				}
 				//是否修改歌词信息
 				if (StringUtils.isNotBlank(lrc) && !lrc.equals(music.getLrc())) {
-					lrcStr = lrc;
+					updateModel.param("lrc", lrc);
 				}
 				
 				try {
-					count = model.update()
-							.param("song", songStr)
-							.param("singer", singerStr)
-							.param("song_path", song_key)
-							.param("cover_path", cover_key)
-							.param("introduce", introduceStr)
-							.param("cids", cidsStr)
-							.param("tags", tagsStr)
-							.param("lrc", lrcStr)
-							.where("id", music.getId()).executeAndCommit(Integer.class);
+					count = updateModel.where("id", music.getId()).executeAndCommit(Integer.class);
 				} catch (Exception e) {
 					logger.warn("更新音乐失败：" + e.getMessage());
 					count = 0;
 				}
 			}
 		}
-		return count;
+		return count > 0;
 	}
 
 	@Override

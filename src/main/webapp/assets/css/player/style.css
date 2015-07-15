@@ -10,6 +10,7 @@ body{
   	-khtml-opacity: 0.8;
   	overflow: hidden;
 }
+
 div#music-album-list{
 	height: 770px;
 	padding: 0;

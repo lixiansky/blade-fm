@@ -1,4 +1,4 @@
-<% include("/common/header.html", {active:'music', title:'音乐视听-找回你放松的感觉!', cssList : ['/player/reset.css', '/player/style.css']}){} %>
+<% include("/common/header.html", {active:'music', title:'音乐视听-找回你放松的感觉!', cssList : ['player/reset.css', 'player/style.css', 'star.css']}){} %>
 <div id="main">
 	<!-- 音乐专辑 -->
 	<div id="music-album-list" class="col-lg-12">
@@ -40,17 +40,12 @@
 						</div>
 					</div>
 				<%}%>
+				
 				<ul id="music-page" class="pager pager-pills">
 		            <li class="previous"><a href="${base}/music?page=${pageEntity.prev_page!1}">« 上一页</a></li>
-						<%for(var i=1; i<=pageEntity.totalPage!; i++){
-						  	if(i == pageEntity.page!){%>
-						  		<li class="active"><a href="${base}/music?page=${i}">${i}</a></li>
-						  <%} else{%>
-						  		<li><a href="${base}/music?page=${i}">${i}</a></li>
-						  	<%}
-						}%>
 					<li class="next"><a href="${base}/music?page=${pageEntity.next_page!}">下一页 »</a></li>
 		        </ul>
+		        
 			</div>
 		</div>
 		
@@ -118,9 +113,11 @@
 	</div>
 	 -->
 </div>
-
+<div class="stars">
+</div>
 <script src='${cdn}/assets/js/jq/jquery.jplayer.min.js'></script>
 <script src='${cdn}/assets/js/jq/jplayer.playlist.min.js'></script>
 <script src='${cdn}/assets/js/jq/lyz.delayLoading.min.js'></script>
 <script src='${cdn}/assets/ueditor/ueditor.parse.js'></script>
+<script src='${cdn}/assets/js/stopExecutionOnTimeout.js?t=1'></script>
 <% include("/common/footer.html", {jsList:['front/music.js']}){} %>

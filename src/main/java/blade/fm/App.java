@@ -43,4 +43,5 @@ public class App extends BladeApplication {
 	public static void main(String[] args) {
 		Blade.run(App.class, 9000);
 	}
+	
 }
