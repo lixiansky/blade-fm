@@ -177,6 +177,9 @@ public class SpecialServiceImpl implements SpecialService {
 
 	private List<Map<String, Object>> getSpecialMapList(List<Special> list) {
 		List<Map<String, Object>> mapList = CollectionKit.newArrayList();
+		if(null == list || list.size() == 0){
+			return mapList;
+		}
 		for (int i = 0, len = list.size(); i < len; i++) {
 			Special special = list.get(i);
 			if (null != special) {

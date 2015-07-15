@@ -13,6 +13,7 @@ import blade.fm.Constant;
 import blade.fm.route.BaseRoute;
 import blade.fm.service.MusicService;
 import blade.plugin.sql2o.Page;
+import blade.render.ModelAndView;
 import blade.servlet.Request;
 import blade.servlet.Response;
 
@@ -29,20 +30,18 @@ public class MusicRoute extends BaseRoute {
 	private MusicService musicService;
 	
 	@Route("/")
-	public String home(Request request, Response response){
-		return index(request, response); 
-	}
-	
-	@Route("index")
-	public String index(Request request, Response response){
+	public ModelAndView home(Request request, Response response){
+		ModelAndView modelAndView = new ModelAndView("music");
 		String singer = request.query("singer");
 		String song = request.query("song");
 		Integer uid = getUid(request);
 		Integer page = request.queryToInt("page");
-		Page<Map<String, Object>> pageData = musicService.getPageMapList(uid, singer, song, null, null, 1, page, 9,
-				"create_time desc");
-		request.attribute("pageEntity", pageData);
-		return "music";
+		
+		Page<Map<String, Object>> pageData = musicService.getPageMapList(uid, singer, song, null, null, 1, page, pageSize, "create_time desc");
+		
+		modelAndView.add("pageEntity", pageData);
+		
+		return modelAndView; 
 	}
 	
 	/**

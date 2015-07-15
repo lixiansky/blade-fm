@@ -110,25 +110,6 @@ public interface UserService {
 	int update(Integer uid, String email, String nickName, Long space_size, Integer status);
 
 	/**
-	 * 第三方登录
-	 * @param openid
-	 * @param type
-	 * @return
-	 */
-	User openLogin(String openid, Integer type);
-	
-	/**
-	 * 绑定openid
-	 * @param type
-	 * @param openid
-	 * @param nickName
-	 * @param email
-	 * @param ip
-	 * @return
-	 */
-	User openBind(Integer type, String openid, String nickName, String email, String ip);
-
-	/**
 	 * 获取user map
 	 * @param user
 	 * @param uid

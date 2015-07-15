@@ -8,7 +8,6 @@ import blade.annotation.Path;
 import blade.annotation.Route;
 import blade.fm.service.FocusService;
 import blade.fm.service.MusicService;
-import blade.fm.service.OpenService;
 import blade.fm.service.RadioService;
 import blade.fm.service.SpecialService;
 import blade.fm.service.UserService;
@@ -24,8 +23,6 @@ public class SpecialRoute extends BaseRoute {
 	private MusicService musicService;
 	@Inject
 	private SpecialService specialService;
-	@Inject
-	private OpenService openService;
 	@Inject
 	private FocusService focusService;
 	@Inject

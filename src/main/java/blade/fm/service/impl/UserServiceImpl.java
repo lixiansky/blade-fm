@@ -8,10 +8,8 @@ import org.apache.commons.lang3.StringUtils;
 
 import blade.annotation.Component;
 import blade.annotation.Inject;
-import blade.fm.model.Open;
 import blade.fm.model.User;
 import blade.fm.service.ActiveService;
-import blade.fm.service.OpenService;
 import blade.fm.service.UserService;
 import blade.fm.util.Base64;
 import blade.fm.util.BeanUtil;
@@ -25,8 +23,7 @@ import blade.plugin.sql2o.Page;
 public class UserServiceImpl implements UserService {
 
 	private User model = new User();
-	@Inject
-	private OpenService openService;
+	
 	@Inject
 	private ActiveService activeService;
 
@@ -159,24 +156,6 @@ public class UserServiceImpl implements UserService {
 			}
 		}
 		return count;
-	}
-
-	@Override
-	public User openLogin(String openid, Integer type) {
-		User user = null;
-		Open open = openService.get(null, openid, type);
-		if (null != open) {
-			user = this.find(null, open.getEmail(), null, 1);
-		}
-		return user;
-	}
-
-	@Override
-	public User openBind(Integer type, String openid, String nickName, String email, String ip) {
-		String pwd = StringKit.random(6);
-		User user = this.register(nickName, email, pwd, ip);
-		openService.save(email, type, openid);
-		return user;
 	}
 
 	@Override

@@ -33,6 +33,7 @@ import blade.servlet.Request;
 import blade.servlet.Response;
 
 import com.alibaba.fastjson.JSON;
+import com.baidu.ueditor.ActionEnter;
 
 /**
  * 文件上传
@@ -75,6 +76,12 @@ public class UploadController extends BaseRoute {
 			String ctx = request.contextPath();
 			domainBase = request.scheme() + "://" + request.servletRequest().getServerName() + ":" + request.port() + ctx + "/";
 		}
+	}
+	
+	@Route("ueditor")
+	public void ueditor(Request request, Response response) {
+		response.header("Content-Type", "text/html");
+		response.text(new ActionEnter(request.servletRequest()).exec());
 	}
 
 	/**
@@ -299,11 +306,5 @@ public class UploadController extends BaseRoute {
 		String saveFilePath = savePath + File.separator + dateStr + random + extName;
 		return saveFilePath;
 	}
-/*
-	public void ueditor(Request request) throws UnsupportedEncodingException, JSONException {
-		request.setCharacterEncoding("utf-8");
-		response.setHeader("Content-Type", "text/html");
-		String rootPath = request.getServletContext().getRealPath("/");
-		r.renderText(new ActionEnter(request, rootPath).exec());
-	}*/
+	
 }

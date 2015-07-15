@@ -24,10 +24,10 @@ public class ActionEnter {
 
 	private ConfigManager configManager = null;
 
-	public ActionEnter(HttpServletRequest request, String rootPath) {
+	public ActionEnter(HttpServletRequest request) {
 
 		this.request = request;
-		this.rootPath = rootPath;
+		this.rootPath = request.getServletContext().getRealPath("/");
 		this.actionType = request.getParameter("action");
 		this.contextPath = request.getContextPath();
 		this.configManager = ConfigManager.getInstance(this.rootPath, this.contextPath, request.getRequestURI());

@@ -22,10 +22,10 @@ public class App extends BladeApplication {
 		Blade.ioc("blade.fm.service.*");
 		
 		// 设置视图位置和默认后缀名称
-		Blade.view("/", ".html");
+		Blade.view("/WEB-INF/views/", ".html");
 		
 		// 设置静态目录
-		Blade.staticFolder("/assets/", "/upload/");
+		Blade.staticFolder("/assets/", "/userfiles/");
 		
 		// 设置模板引擎
 		BeetlRender beetlRender = new BeetlRender();

@@ -7,7 +7,6 @@ import blade.annotation.Path;
 import blade.annotation.Route;
 import blade.fm.Constant;
 import blade.fm.model.User;
-import blade.fm.service.OpenService;
 import blade.fm.service.UserService;
 import blade.render.ModelAndView;
 import blade.servlet.Request;
@@ -24,8 +23,6 @@ public class IndexRoute extends BaseRoute {
 	
 	@Inject
 	private UserService userService;
-	@Inject
-	private OpenService openService;
 	
 	@Route("/")
 	public String index(Request request) {

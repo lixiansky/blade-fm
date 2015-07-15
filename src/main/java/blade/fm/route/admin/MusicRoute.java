@@ -41,19 +41,12 @@ public class MusicRoute extends BaseRoute {
 	 */
 	@Route("/")
 	public ModelAndView home(Request request) {
-		return index(request);
-	}
-	
-	/**
-	 * 音乐列表
-	 */
-	@Route("/index")
-	public ModelAndView index(Request request) {
 		ModelAndView modelAndView = getAdminModelAndView("music");
 		String singer = request.query("singer");
 		String song = request.query("song");
 		Integer uid = getUid(request);
 		Integer page = request.queryToInt("page");
+		page = (null == page || page < 1) ? 1 : page;
 		
 		Page<Map<String, Object>> musicPage = musicService.getPageMapList(uid, singer, song, null, null, 1, page,
 				pageSize, "id desc");
@@ -61,7 +54,7 @@ public class MusicRoute extends BaseRoute {
 		modelAndView.add("pageMap", musicPage);
 		return modelAndView;
 	}
-
+	
 	/**
 	 * 显示音乐
 	 */
@@ -72,7 +65,7 @@ public class MusicRoute extends BaseRoute {
 		// 编辑
 		if (null != mid) {
 			Map<String, Object> music = musicService.getMap(null, mid);
-			request.attribute("music", music);
+			modelAndView.add("music", music);
 		}
 		List<Mcat> mcatList = mcatService.getList(1);
 		List<Map<String, Object>> specialList = specialService.getList(null, 1, null, null, 1, "id desc");

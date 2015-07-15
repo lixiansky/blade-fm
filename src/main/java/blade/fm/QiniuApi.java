@@ -21,8 +21,8 @@ import com.qiniu.util.StringMap;
  */
 public class QiniuApi {
 	
-	private final static String ACCESSKEY = "Wey8eOUeoHVXC1NwmLLwbvDES-3PIOlSpYg0umbz";
-	private final static String SECRETKEY = "N51TJuZugUlTeBDlEDfqjuF2SEQ94UEmZMesCKLA";
+	private final static String ACCESSKEY = "";
+	private final static String SECRETKEY = "";
 	
 	private final static Auth auth = Auth.create(ACCESSKEY, SECRETKEY);
 	
@@ -48,11 +48,11 @@ public class QiniuApi {
 				"returnBody",
 				"{\"key\":$(key),\"hash\":$(etag),\"w\":$(imageInfo.width),\"h\":$(imageInfo.height),\"format\":$(imageInfo.format)}");
 		
-		return auth.uploadToken("blade-fm", key, 3600, policy);
+		return auth.uploadToken(BUCKET_NAME, key, 3600, policy);
 	}
 	
 	public static String getUrlByKey(String key){
-		return "http://7xjr0p.com1.z0.glb.clouddn.com/" + key; 
+		return "7xke9w.media1.z0.glb.clouddn.com/" + key; 
 	}
 	
 	public static String delete(String key){
