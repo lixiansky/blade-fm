@@ -1,11 +1,9 @@
 /*!
- * ZUI - v1.1.0 - 2014-08-05
+ * ZUI - v1.3.1 - 2015-05-19
  * http://zui.sexy
  * GitHub: https://github.com/easysoft/zui.git 
- * Copyright (c) 2014 cnezsoft.com; Licensed MIT
+ * Copyright (c) 2015 cnezsoft.com; Licensed MIT
  */
-
-/* Some code copy from Bootstrap v3.0.0 by @fat and @mdo. (Copyright 2013 Twitter, Inc. Licensed under http://www.apache.org/licenses/)*/
 
 
 a {
@@ -29,7 +27,6 @@ a:focus {
   background-color: #a10116;
   border-color: #74010f;
   -webkit-box-shadow: 0 2px 1px rgba(0, 0, 0, .1);
-     -moz-box-shadow: 0 2px 1px rgba(0, 0, 0, .1);
           box-shadow: 0 2px 1px rgba(0, 0, 0, .1);
 }
 .btn-primary:active,
@@ -37,7 +34,6 @@ a:focus {
 .open .dropdown-toggle.btn-primary {
   background-image: none;
   -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, .1);
-     -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, .1);
           box-shadow: inset 0 1px 2px rgba(0, 0, 0, .1);
 }
 .btn-primary.disabled,
@@ -149,18 +145,16 @@ a.highlight-primary:hover {
   border-color: #740a18;
   outline: 0;
   -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(116, 10, 24, .6);
-     -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(116, 10, 24, .6);
           box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(116, 10, 24, .6);
 }
 .form-control:focus {
   border-color: #740a18;
   -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(116, 10, 24, .6);
-     -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(116, 10, 24, .6);
           box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(116, 10, 24, .6);
 }
 a.list-group-item:hover,
 a.list-group-item:focus {
-  color: #333;
+  color: #353535;
   text-decoration: none;
   background-color: #f9ebef;
 }
@@ -220,7 +214,6 @@ a.list-group-item:focus {
 .navbar-fixed-left.navbar-inverse .navbar-nav {
   border-bottom: 1px solid #a30e21;
   -webkit-box-shadow: inset 0 -1px 0 #45060e;
-     -moz-box-shadow: inset 0 -1px 0 #45060e;
           box-shadow: inset 0 -1px 0 #45060e;
 }
 .navbar-fixed-left.navbar-inverse.navbar-collapsed .navbar-nav > li.nav-heading:hover {
@@ -269,7 +262,6 @@ a.list-group-item:focus {
 .nav-stacked.nav-secondary > li.active > a:hover,
 .nav-stacked.nav-secondary > li.active > a:focus {
   -webkit-box-shadow: inset -2px 0 0 #ca011b;
-     -moz-box-shadow: inset -2px 0 0 #ca011b;
           box-shadow: inset -2px 0 0 #ca011b;
 }
 .nav .caret {
@@ -355,8 +347,8 @@ table.tablesorter thead tr .headerSortDown:after {
   border-left-color: #fff;
 }
 .datetimepicker td.day.today {
-  background-color: #e48600 !important;
-  border-color: #e48600 !important;
+  background-color: #f1a325 !important;
+  border-color: #f1a325 !important;
 }
 .datetimepicker td.day.active {
   background-color: #ca011b !important;
@@ -367,12 +359,11 @@ table.tablesorter thead tr .headerSortDown:after {
 }
 .datetimepicker td.day.today:hover,
 .datetimepicker td.day.today.active:hover {
-  background-color: #b16800 !important;
+  background-color: #d5890e !important;
 }
 .ke-container.focus {
   border-color: #740a18 !important;
   -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(116, 10, 24, .6)!important;
-     -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(116, 10, 24, .6)!important;
           box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(116, 10, 24, .6)!important;
 }
 .ke-menu-item-on {
@@ -384,7 +375,6 @@ table.tablesorter thead tr .headerSortDown:after {
 .ke-input-text:focus {
   border-color: #740a18 !important;
   -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(116, 10, 24, .6)!important;
-     -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(116, 10, 24, .6)!important;
           box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(116, 10, 24, .6)!important;
 }
 .messager-primary {
@@ -393,8 +383,5 @@ table.tablesorter thead tr .headerSortDown:after {
 .comment:hover > .content > .actions > a {
   color: #740a18;
 }
-.card:hover a,
-a.card:hover {
-  color: #2e0409;
-}
+
 /*# sourceMappingURL=zui-theme.css.map */

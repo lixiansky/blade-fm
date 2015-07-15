@@ -28,7 +28,7 @@ public class Constant {
 	/**
 	 * 上传文件目录
 	 */
-	public static final String UPLOAD_FOLDER = "upload";
+	public static final String UPLOAD_FOLDER = "userfiles";
 	
 	/**
 	 * 个人信息存储变量

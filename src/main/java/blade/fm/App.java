@@ -34,7 +34,7 @@ public class App extends BladeApplication {
 		
 		// 配置数据库插件
 		Sql2oPlugin sql2oPlugin = Sql2oPlugin.INSTANCE;
-		sql2oPlugin.config("jdbc:mysql://127.0.0.1:3306/fm-cloud", "com.mysql.jdbc.Driver", "root", "root");
+		sql2oPlugin.config("jdbc:mysql://127.0.0.1:3306/blade-fm", "com.mysql.jdbc.Driver", "root", "root");
 		sql2oPlugin.openCache();
 		sql2oPlugin.run();
 		

@@ -23,6 +23,8 @@ import blade.BladeWebContext;
 import blade.annotation.Inject;
 import blade.annotation.Path;
 import blade.annotation.Route;
+import blade.fm.Constant;
+import blade.fm.model.User;
 import blade.fm.service.HashService;
 import blade.kit.CollectionKit;
 import blade.kit.DateKit;
@@ -57,21 +59,23 @@ public class UploadController extends BaseRoute {
 	@Inject
 	private HashService hashService;
 
-	private String rootDir;
-	private String uplodDir = Blade.webRoot() + "/upload";
+	private String uplodDir = Blade.webRoot() + File.separator + Constant.UPLOAD_FOLDER;
 	private Integer uid = 1;
 
 	public void init(){
 		request = BladeWebContext.request();
-		if (null == rootDir) {
-			rootDir = request.servletPath();
+		User user = request.session().attribute(Constant.LOGIN_SESSION);
+		if(null != user){
+			this.uid = user.getUid();
+		} else {
 			this.uid = 1;
-			tempPath = rootDir + uplodDir + File.separator + "temp";
-			imagePath = rootDir + uplodDir + File.separator + "images" + File.separator + this.uid;
-			mp3Path = rootDir + uplodDir + File.separator + "mp3" + File.separator + this.uid;
-			videoPath = rootDir + uplodDir + File.separator + "video" + File.separator + this.uid;
-			filePath = rootDir + uplodDir + File.separator + "files" + File.separator + this.uid;
 		}
+		tempPath = uplodDir + File.separator + "temp";
+		imagePath = uplodDir + File.separator + "images" + File.separator + this.uid;
+		mp3Path = uplodDir + File.separator + "mp3" + File.separator + this.uid;
+		videoPath = uplodDir + File.separator + "video" + File.separator + this.uid;
+		filePath = uplodDir + File.separator + "files" + File.separator + this.uid;
+		
 		if (null == domainBase) {
 			String ctx = request.contextPath();
 			domainBase = request.scheme() + "://" + request.servletRequest().getServerName() + ":" + request.port() + ctx + "/";
@@ -282,11 +286,14 @@ public class UploadController extends BaseRoute {
 	private Map<String, Object> getResponse(String saveFilePath, String fileName, Long length) {
 		Map<String, Object> fileInfo = CollectionKit.newHashMap();
 		fileInfo.put("save_path", saveFilePath);
-		fileInfo.put("save_name", saveFilePath.substring(saveFilePath.lastIndexOf(".") + 1));
+		String saveName = saveFilePath.substring(saveFilePath.lastIndexOf("\\") + 1);
+		fileInfo.put("save_name", saveName);
 		fileInfo.put("file_name", fileName);
-		String url = domainBase + saveFilePath.replace(rootDir, "").replaceAll("\\\\", "/");
+		String urlFixx = saveFilePath.substring(saveFilePath.indexOf(Constant.UPLOAD_FOLDER) + 10);
+		String url = domainBase + Constant.UPLOAD_FOLDER + "/" + urlFixx.replaceAll("\\\\", "/");
 		fileInfo.put("url", url);
-		fileInfo.put("key", saveFilePath.replace(rootDir, "").replaceAll("\\\\", "/"));
+		String key = saveFilePath.substring(saveFilePath.indexOf(Constant.UPLOAD_FOLDER));
+		fileInfo.put("key", key.replaceAll("\\\\", "/"));
 		fileInfo.put("length", length);
 		return fileInfo;
 	}
@@ -303,7 +310,7 @@ public class UploadController extends BaseRoute {
 		// 生成文件名：  
 		String dateStr = DateKit.dateFormat(new Date(), "yyyyMMddHHmmss");
 		String random = StringKit.random(5);
-		String saveFilePath = savePath + File.separator + dateStr + random + extName;
+		String saveFilePath = savePath + File.separator + dateStr + random + "." + extName;
 		return saveFilePath;
 	}
 	
