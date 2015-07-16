@@ -1,1 +1,12 @@
 # blade-fm
+
+该项目是基于`blade`框架搭建的音乐电台系统，使用七牛云作为存储CDN。
+
+### 使用
+
++ 建立`blade_fm`数据库，数据库文件在doc/blade_fm.sql
++ 将`blade-fm`部署在本地tomcat
++ 修改`blade.properties`配置文件
+
+如果您在使用过程中有任何疑问，可以加qq群：[1013565](http://shang.qq.com/wpa/qunwpa?idkey=932642920a5c0ef5f1ae902723c4f168c58ea63f3cef1139e30d68145d3b5b2f)
+或者给我发邮件：biezhi.me#gmail.com(#替换为@)
