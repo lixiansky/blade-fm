@@ -26,7 +26,7 @@ public class QiniuApi {
 	
 	private final static Auth auth = Auth.create(ACCESSKEY, SECRETKEY);
 	
-	private final static String BUCKET_NAME = "blade-fm";
+	private final static String BUCKET_NAME = App.bladeConf.get("QINIU.BUCKET_NAME");
 	
 	private final static Logger log = Logger.getLogger(QiniuApi.class);
 	
@@ -52,7 +52,7 @@ public class QiniuApi {
 	}
 	
 	public static String getUrlByKey(String key){
-		return "http://7xke9w.media1.z0.glb.clouddn.com/" + key; 
+		return App.bladeConf.get("QINIU.CDN_PREFIX") + "/" + key; 
 	}
 	
 	public static String delete(String key){

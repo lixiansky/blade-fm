@@ -18,6 +18,7 @@ public class Album extends Model {
 	private String title;
 	private String introduce;
 	private String cover;
+	private String tags;
 	private String pics;
 	private Integer status;
 	private Integer create_time;
@@ -87,6 +88,14 @@ public class Album extends Model {
 
 	public void setCreate_time(Integer create_time) {
 		this.create_time = create_time;
+	}
+
+	public String getTags() {
+		return tags;
+	}
+
+	public void setTags(String tags) {
+		this.tags = tags;
 	}
 	
 }

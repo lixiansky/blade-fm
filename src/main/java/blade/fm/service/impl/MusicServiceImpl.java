@@ -18,7 +18,6 @@ import blade.fm.service.FileService;
 import blade.fm.service.McatService;
 import blade.fm.service.MusicService;
 import blade.fm.service.UserService;
-import blade.fm.util.BeanUtil;
 import blade.kit.CollectionKit;
 import blade.kit.DateKit;
 import blade.kit.FileKit;
@@ -292,7 +291,14 @@ public class MusicServiceImpl implements MusicService {
 			music = this.get(mid);
 		}
 		if (null != music) {
-			resultMap = BeanUtil.toMap(music);
+			resultMap.put("id", music.getId());
+			resultMap.put("singer", music.getSinger());
+			resultMap.put("song", music.getSong());
+			resultMap.put("introduce", music.getIntroduce());
+			resultMap.put("lrc", music.getLrc());
+			resultMap.put("like_count", music.getLike_count());
+			resultMap.put("download_count", music.getDownload_count());
+			resultMap.put("status", music.getStatus());
 			// 歌曲路径
 			if (StringUtils.isNotBlank(music.getSong_path())) {
 				if (music.getSong_path().startsWith("http://")) {

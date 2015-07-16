@@ -9,7 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import blade.Blade;
 import blade.annotation.Component;
 import blade.annotation.Inject;
-import blade.fm.Constant;
 import blade.fm.QiniuApi;
 import blade.fm.model.Radio;
 import blade.fm.model.Special;
@@ -18,7 +17,6 @@ import blade.fm.service.FileService;
 import blade.fm.service.RadioService;
 import blade.fm.service.SpecialService;
 import blade.fm.service.UserService;
-import blade.fm.util.BeanUtil;
 import blade.kit.CollectionKit;
 import blade.kit.DateKit;
 import blade.kit.FileKit;
@@ -52,7 +50,12 @@ public class RadioServiceImpl implements RadioService {
 			radio = this.get(id);
 		}
 		if (null != radio) {
-			resultMap = BeanUtil.toMap(radio);
+			resultMap.put("id", radio.getId());
+			resultMap.put("uid", radio.getUid());
+			resultMap.put("sid", radio.getSid());
+			resultMap.put("title", radio.getTitle());
+			resultMap.put("status", radio.getStatus());
+			
 			// 歌曲路径
 			if (StringUtils.isNotBlank(radio.getUrl())) {
 				if (radio.getUrl().startsWith("http://")) {

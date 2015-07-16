@@ -9,12 +9,9 @@ import org.apache.commons.lang3.StringUtils;
 import blade.Blade;
 import blade.annotation.Component;
 import blade.annotation.Inject;
-import blade.fm.Constant;
 import blade.fm.QiniuApi;
 import blade.fm.model.Album;
 import blade.fm.service.AlbumService;
-import blade.fm.service.FileService;
-import blade.fm.util.BeanUtil;
 import blade.kit.CollectionKit;
 import blade.kit.DateKit;
 import blade.kit.FileKit;
@@ -45,7 +42,12 @@ public class AlbumServiceImpl implements AlbumService {
 			picture = this.get(id);
 		}
 		if (null != picture) {
-			resultMap = BeanUtil.toMap(picture);
+			resultMap.put("id", picture.getId());
+			resultMap.put("uid", picture.getUid());
+			resultMap.put("title", picture.getTitle());
+			resultMap.put("introduce", picture.getIntroduce());
+			resultMap.put("status", picture.getStatus());
+			
 			if(StringUtils.isNotBlank(picture.getPics())){
 				List<Map<String, Object>> pics = JSON.parseObject(picture.getPics(), List.class);
 				resultMap.put("pics", pics);
@@ -91,6 +93,7 @@ public class AlbumServiceImpl implements AlbumService {
 	@Override
 	public Page<Map<String, Object>> getPageMapList(Integer uid, String title, Integer status, Integer page,
 			Integer pageSize, String order) {
+		
 		Page<Album> pageList = this.getPageList(uid, title, status, page, pageSize, order);
 
 		List<Album> pictureList = pageList.getResults();

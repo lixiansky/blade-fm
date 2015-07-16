@@ -12,6 +12,7 @@ import blade.annotation.Route;
 import blade.fm.route.BaseRoute;
 import blade.fm.service.AlbumService;
 import blade.plugin.sql2o.Page;
+import blade.render.ModelAndView;
 import blade.servlet.Request;
 import blade.servlet.Response;
 
@@ -27,20 +28,23 @@ public class PictureRoute extends BaseRoute {
 	@Inject
 	private AlbumService pictureService;
 	
-	@Route
-	public String index(Request request, Response response){
+	@Route("/")
+	public ModelAndView index(Request request, Response response){
+		
+		ModelAndView modelAndView = new ModelAndView("picture");
 		String mode = request.query("mode");
 		Integer uid = getUid(request);
 		Integer page = request.queryToInt("page");
+		page = (null == page || page < 1) ? 1 : page;
 		
 		Page<Map<String, Object>> picPage = pictureService.getPageMapList(uid, null, 1, page, pageSize, "create_time desc");
 		if(StringUtils.isNotBlank(mode) && mode.equals("ajax")){
 			response.json(JSON.toJSONString(picPage));
 			return null;
 		} else{
-			request.attribute("picPage", picPage);
+			modelAndView.add("picPage", picPage);
 		}
-		return "picture";
+		return modelAndView;
 	}
 	
 	/**
