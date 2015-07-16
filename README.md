@@ -1,6 +1,7 @@
 # blade-fm
 
 该项目是基于`blade`框架搭建的音乐电台系统，使用七牛云作为存储CDN。
+演示站点：[http://fm.bladejava.com](http://fm.bladejava.com)
 
 ### 使用
 
