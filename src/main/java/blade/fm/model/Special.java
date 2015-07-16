@@ -16,8 +16,10 @@ public class Special extends Model {
 	private Integer id;
 	private Integer uid;
 	private String title;
+	private Integer type;
 	private String introduce;
 	private String cover;
+	private Integer is_fine;
 	private Integer hit;
 	private Integer create_time;
 	private Integer last_time;
@@ -96,6 +98,22 @@ public class Special extends Model {
 
 	public void setCover(String cover) {
 		this.cover = cover;
+	}
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
+
+	public Integer getIs_fine() {
+		return is_fine;
+	}
+
+	public void setIs_fine(Integer is_fine) {
+		this.is_fine = is_fine;
 	}
 
 }

@@ -65,13 +65,13 @@ public class IndexRoute extends BaseRoute {
 				//登录成功
 				if (null != user) {
 					request.session().attribute(Constant.LOGIN_SESSION, user);
-					response.text(Constant.MSG_SUCCESS);
+					response.text(MSG_SUCCESS);
 				} else {
-					response.text(Constant.MSG_ERROR);
+					response.text(MSG_ERROR);
 				}
 				return null;
 			} else{
-				response.text(Constant.MSG_VERIFY_ERROR);
+				response.text(MSG_VERIFY_ERROR);
 				return null;
 			}
 		}

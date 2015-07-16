@@ -41,22 +41,6 @@ public class Constant {
 	
 	public static final String ADMIN_LOGIN = "/login";
 	
-	public static final String MSG_SUCCESS = "success";
-	
-	public static final String MSG_FAILURE = "failure";
-	
-	public static final String MSG_ERROR = "error";
-	
-	public static final String MSG_VERIFY_ERROR = "verify_error";
-	
-	public static final String MSG_EXIST = "exist";
-	
-	public static final Integer PAGE_SIZE = 10;
-	
-	public static String QQ_TOKEN = "";
-	
-	public static Long QQ_TOKEN_EXPIREIN = 0L;
-	
 	public static boolean isFile(String filePath){
 		if(StringKit.isNotBlank(filePath)){
 			return FileKit.isFile(Blade.webRoot() + "/" + filePath);

@@ -7,23 +7,17 @@ import blade.servlet.Request;
 
 public class BaseRoute {
 	
+	public static final String MSG_SUCCESS = "success";
+	
+	public static final String MSG_FAILURE = "failure";
+	
+	public static final String MSG_ERROR = "error";
+	
+	public static final String MSG_VERIFY_ERROR = "verify_error";
+	
+	public static final String MSG_EXIST = "exist";
+	
 	protected Integer pageSize = 10;
-	
-	// 成功
-	protected final String SUCCESS = "success";
-	
-	// 服务器异常
-	protected final String ERROR = "error";
-	
-	// 已经存在
-	public final String EXIST = "exist";
-	
-	// 失败
-	protected final String FAILURE = "failure";
-	
-	public ModelAndView getFrontModelAndView(String view){
-		return new ModelAndView(view);
-	}
 	
 	public ModelAndView getAdminModelAndView(String view){
 		view = "/admin/" + view;

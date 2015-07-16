@@ -105,7 +105,7 @@ public class MusicRoute extends BaseRoute {
 		Integer mid = request.queryToInt("mid");
 		Integer type = request.queryToInt("type");
 		musicService.like(mid, type);
-		response.text(Constant.MSG_SUCCESS);
+		response.text(MSG_SUCCESS);
 	}
 	
 	/**

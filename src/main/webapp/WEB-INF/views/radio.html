@@ -1,4 +1,5 @@
-<% include("/common/header.html", {active:'special',title:'百味电台-${specialMap.title!}'}){} %>
+<% include("/common/header.html", {active:'special',title:'百味电台-${specialMap.title!}', cssList:['radio.css']}){} %>
+<link href="http://jinzhe.net/lab/styles/example.css" rel="stylesheet">
 <div>
 	<article>
 		<blockquote>
@@ -16,28 +17,116 @@
 				<p class="text-muted">简介：${specialMap.introduce!}</p>
 			</div>
 		</blockquote>
-		<div class="list-group">
-			<%
-			for(radio in radioList!){%>
-				<a href="javascript:void(0);" onclick="$unique.radio.play(this, ${radio.id!});" class="list-group-item">${radio.title!}<i class="icon-play pull-right"></i></a>
-			<%}
-			%>
-        </div>
-		<!-- 
-		<div>
-			<p class="pull-right text-muted">发布时间：2013年11月7日 16:44:21
-				&nbsp;点击数：234</p>
-			<p class="text-important">
-				本文版权所有归<a href="###">@catouse</a>
-			</p>
-			<ul class="pager pager-justify">
-				<li class="previous"><a href="${base}/special"><i class="icon-arrow-left"></i>
-						回到专辑列表</a></li>
-				<li><a href="#"><i class="icon-list-ul"></i> 目录</a></li>
-				<li class="next disabled"><a href="#">没有下一篇 <i class="icon-arrow-right"></i></a></li>
-			</ul>
+</head>
+<body>
+<br>
+<div class="container">
+	<div class="row">
+		<div class="col-lg-12 col-md-12 col-xs-12">
+			<div class="example"><span class="title"><i class="fa fa-fw fa-eye"></i> 播放列表</span>
+				<div id="music" class="row">
+					<%
+					for(radio in radioList!){%>
+						<div class="col-xs-12 col-sm-4 pr">
+							<p data-current="${radio.id!}" data-id="0" data-title="${radio.title!}" data-art="Kara"
+								class="playlist tip">
+								<img align="absmiddle"
+									src="${cdn}/assets/images/radio.png">&nbsp;&nbsp;${radio.title!}
+							</p>
+							<div class="pa button">
+								<i class="fa fa-pause"></i>
+							</div>
+							<div class="pa progress">
+								<span></span>
+								<p></p>
+							</div>
+							<div class="pa time"></div>
+						</div>
+					<%}
+					%>
+					<!-- <div style="line-height:300px" class="text-center">loading...</div> -->
+				</div>
+			</div>
 		</div>
-		 -->
-	</article>
+	</div>
 </div>
+
+<script src="http://jinzhe.net/lab/scripts/jquery.wiseAudio.js"></script>
+<script>
+$(function(){
+ 
+	$.wiseAudio({
+		// 歌曲数据JSON
+		data:"http://jinzhe.net/api.php?action=music&do=json",
+		//模仿模式 list:列表 random:随机
+		mode:"random",
+		list:function(options,audio,json){
+			var html='';
+			$(json).map(function(i){
+				html+="<div class='col-xs-12 col-sm-4 pr'>";
+				html+="<p class='playlist tip' data-art='"+json[i].art+"' data-title='"+json[i].name+"' data-id='"+i+"' data-current='"+json[i].id+"'>";
+				html+="<span class='badge pull-right'>"+json[i].art+"</span>";
+				html+="<img src='"+json[i].image+"' align='absmiddle'>&nbsp;&nbsp;"+json[i].name;
+				html+="</p>";
+				html+="<div class='pa button'><i class='fa fa-pause'></i></div>";
+				html+="<div class='pa progress'><span></span><p></p></div>";
+				html+="<div class='pa time'></div>";
+				html+="<div class='pa loop'></div>";
+				html+="</div>";
+			});
+			//$("#music").html(html);
+ 
+ 
+			$(".loop").text({'random':'随机','list':'列表','repeat':'单曲'}[options.mode]);
+
+			$(document).on("click",".button",function(){
+				var $this=$(this);
+				if($this.find("i").hasClass("fa-pause")){
+					audio.pause();
+				}else{
+					audio.play();
+				}
+			});
+			$(document).on("click",".loop",function(){
+				var $this=$(this);
+				if($this.text()=='单曲'){
+					$(".loop").text('随机');
+					options.mode='random';
+				}else if($this.text()=='随机'){
+					$(".loop").text('列表');
+					options.mode='list';
+				}else if($this.text()=='列表'){
+					$(".loop").text('单曲');
+					options.mode='repeat';
+				}
+			});
+		},
+		onplay:function(){
+			setTimeout(function(){
+				$(".playlist").not(".active").siblings(".time,.progress,.loop").hide();
+				$(".playlist").siblings(".button").attr("style","");
+				$(".playlist.active").siblings(".button").find("i").removeClass("fa-play").addClass("fa-pause");
+				$(".playlist.active").siblings(".button,.progress,.time,.loop").show();
+				$(".playlist.active img").css({
+					"-webkit-animation-play-state":"running",
+					"-moz-animation-play-state":"running",
+					"animation-play-state":"running"
+				});
+				$("html,body").animate({scrollTop:$(".playlist.active").offset().top-90});
+				location.href="#!"+$(".playlist.active").data("current");
+				document.title=$(".playlist.active").data("art")+"- "+$(".playlist.active").data("title")
+			},100);
+		},
+		onpause:function(){
+			$(".playlist.active").siblings(".button").find("i").removeClass("fa-pause").addClass("fa-play");
+			$(".playlist.active img").removeClass("roll");
+			$(".playlist.active img").css({
+					"-webkit-animation-play-state":"paused",
+					"-moz-animation-play-state":"paused",
+					"animation-play-state":"paused"
+				});
+		}
+	});
+});
+</script>
 <% include("/common/footer.html", {jsList:['front/radio.js']}){} %>
