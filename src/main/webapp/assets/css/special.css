@@ -6,7 +6,7 @@ body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form,
 	padding: 0;
 }
 body{
-	background: #eee url("../../images/bg/bg_02.jpg") no-repeat center;
+	background: #eee no-repeat center;
   	opacity:0.8;
   	filter:alpha(opacity=80);
   	-moz-opacity:0.8;opacity:0.8;

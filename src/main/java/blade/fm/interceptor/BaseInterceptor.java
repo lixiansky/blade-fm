@@ -4,11 +4,11 @@ import java.util.Map;
 
 import blade.annotation.After;
 import blade.annotation.Before;
+import blade.annotation.Inject;
 import blade.annotation.Interceptor;
 import blade.fm.Constant;
 import blade.fm.model.User;
 import blade.fm.service.SettingService;
-import blade.fm.service.impl.SettingServiceImpl;
 import blade.kit.timw.TimwManager;
 import blade.kit.timw.TimwMonitor;
 import blade.servlet.Request;
@@ -20,7 +20,8 @@ import blade.servlet.Response;
 @Interceptor
 public class BaseInterceptor {
 
-	private SettingService settingService = new SettingServiceImpl();
+	@Inject
+	private SettingService settingService;
 	
 	TimwMonitor monitor = TimwManager.getTimerMonitor();
 	

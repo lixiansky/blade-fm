@@ -30,7 +30,6 @@ public class PictureRoute extends BaseRoute {
 	
 	@Route("/")
 	public ModelAndView index(Request request, Response response){
-		
 		ModelAndView modelAndView = new ModelAndView("picture");
 		String mode = request.query("mode");
 		Integer uid = getUid(request);
@@ -50,13 +49,14 @@ public class PictureRoute extends BaseRoute {
 	/**
 	 * 相册详情
 	 */
-	@Route("/pictures/:id")
-	public String detail(Request request){
+	@Route("/:id")
+	public ModelAndView detail(Request request){
+		ModelAndView modelAndView = new ModelAndView("preview");
 		Integer id = request.pathParamToInt("id");
 		if(null != id){
 			Map<String, Object> pictrue = pictureService.getMap(null, id);
-			request.attribute("pictrue", pictrue);
+			modelAndView.add("pictrue", pictrue);
 		}
-		return "preview";
+		return modelAndView;
 	}
 }

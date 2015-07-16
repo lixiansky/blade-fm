@@ -8,7 +8,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import blade.Blade;
 import blade.annotation.Component;
-import blade.annotation.Inject;
 import blade.fm.QiniuApi;
 import blade.fm.model.Album;
 import blade.fm.service.AlbumService;
@@ -26,9 +25,6 @@ public class AlbumServiceImpl implements AlbumService {
 	private Logger logger = Logger.getLogger(AlbumServiceImpl.class);
 	
 	private Album model = new Album();
-	
-	@Inject
-	private AlbumService albumService;
 	
 	@Override
 	public Album get(Integer id) {
