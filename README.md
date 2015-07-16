@@ -8,5 +8,7 @@
 + 将`blade-fm`部署在本地tomcat
 + 修改`blade.properties`配置文件
 
+*注：*验证码库在`lib`目录下
+
 如果您在使用过程中有任何疑问，可以加qq群：[1013565](http://shang.qq.com/wpa/qunwpa?idkey=932642920a5c0ef5f1ae902723c4f168c58ea63f3cef1139e30d68145d3b5b2f)
 或者给我发邮件：biezhi.me#gmail.com(#替换为@)
