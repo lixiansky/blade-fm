@@ -1,7 +1,11 @@
 package blade.fm;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import blade.Blade;
 import blade.BladeApplication;
+import blade.kit.PropertyKit;
 import blade.kit.log.Logger;
 import blade.plugin.sql2o.Sql2oPlugin;
 import blade.render.BeetlRender;
@@ -34,10 +38,17 @@ public class App extends BladeApplication {
 		
 		// 配置数据库插件
 		Sql2oPlugin sql2oPlugin = Sql2oPlugin.INSTANCE;
-		sql2oPlugin.config("jdbc:mysql://127.0.0.1:3306/blade-fm", "com.mysql.jdbc.Driver", "root", "root");
+		sql2oPlugin.config(bladeConf.get("BLADE.DBURL"), bladeConf.get("BLADE.DBDRIVER"), bladeConf.get("BLADE.DBUSER"), bladeConf.get("BLADE.DBPASS"));
 		sql2oPlugin.openCache();
 		sql2oPlugin.run();
 		
+	}
+	
+	static Map<String, String> bladeConf = new HashMap<String, String>();
+	
+	static{
+		bladeConf = PropertyKit.getPropertyMap("blade.properties");
+		System.out.println(bladeConf);
 	}
 	
 	public static void main(String[] args) {

@@ -21,8 +21,8 @@ import com.qiniu.util.StringMap;
  */
 public class QiniuApi {
 	
-	private final static String ACCESSKEY = "";
-	private final static String SECRETKEY = "";
+	private static String ACCESSKEY = App.bladeConf.get("QINIU.ACCESSKEY");
+	private static String SECRETKEY = App.bladeConf.get("QINIU.SECRETKEY");
 	
 	private final static Auth auth = Auth.create(ACCESSKEY, SECRETKEY);
 	
