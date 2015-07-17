@@ -80,7 +80,7 @@
 		<span class="music-note" id="one">&#9835;</span>
 		<span class="music-note" id="two">&#9834;</span>
 
-		<footer>
+		<div class="footer">
 		岁月缥缈如画，尘世纷繁复杂。<br />
 		人们常说自己听懂了音乐，听懂了歌词，<br />
 		倒不如说是我们的朋友——音乐听懂我们内心的诉说。<br />
@@ -90,7 +90,7 @@
 		自己听的音乐能把周围和未来打动。<br />
 		可是没想到最终却只打动了自己。<br /><br />
 		Copyright &copy; 2014 <a href="http://shaffer.sinaapp.com">Shaffer John</a>
-		</footer>
+		</div>
 
 	</div>
 
@@ -98,15 +98,34 @@
 <script type="text/javascript">
 $(document).ready(function(){
  $("#playlist").jscroll({
-   W:"10px"
-  ,BgUrl:"url(assets/images/s_bg2.gif)"
-  ,Bg:"right 0 repeat-y"
-  ,Bar:{Bd:{Out:"#a3c3d5",Hover:"#b7d5e6"}
-		,Bg:{Out:"-45px 0",Hover:"-45px 0",Focus:"-45px 0"}}
-		,Btn:{btn:true
-			  ,uBg:{Out:"0 0",Hover:"0px 0",Focus:"0px 0"}
-			  ,dBg:{Out:"0 -8px",Hover:"0px -8px",Focus:"0px -8px"}}
-  ,Fn:function(){}
+   W:"10px",
+   BgUrl:"url(assets/images/s_bg2.gif)",
+   Bg:"right 0 repeat-y",
+   Bar:{
+   	Bd:{
+   		Out:"#a3c3d5",
+   		Hover:"#b7d5e6"
+   	},
+   	Bg:{
+   		Out:"-45px 0",
+   		Hover:"-45px 0",
+   		Focus:"-45px 0"
+   	}
+   },
+   Btn:{
+	   btn:true,
+	   uBg:{
+		   Out:"0 0",
+		   Hover:"0px 0",
+		   Focus:"0px 0"
+		},
+		dBg:{
+			Out:"0 -8px",
+			Hover:"0px -8px",
+			Focus:"0px -8px"
+		}
+   },
+   Fn:function(){}
  });
 });
 </script>
