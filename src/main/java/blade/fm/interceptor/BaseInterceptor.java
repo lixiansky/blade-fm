@@ -32,6 +32,8 @@ public class BaseInterceptor {
 	@Before("/*")
 	public void before(Request request, Response response){
 		
+		LOGGER.info("IP=" + request.ip() + ",REFERER=" + request.header("Referer"));
+		
 		monitor.start();
 		
 		String assets = request.contextPath() + "/assets";
