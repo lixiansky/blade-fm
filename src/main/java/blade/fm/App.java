@@ -48,7 +48,6 @@ public class App extends BladeApplication {
 	
 	static{
 		bladeConf = PropertyKit.getPropertyMap("blade.properties");
-		System.out.println(bladeConf);
 	}
 	
 	public static void main(String[] args) {

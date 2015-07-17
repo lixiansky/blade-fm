@@ -1,5 +1,6 @@
 package blade.fm.interceptor;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 import blade.annotation.After;
@@ -9,6 +10,7 @@ import blade.annotation.Interceptor;
 import blade.fm.Constant;
 import blade.fm.model.User;
 import blade.fm.service.SettingService;
+import blade.kit.log.Logger;
 import blade.kit.timw.TimwManager;
 import blade.kit.timw.TimwMonitor;
 import blade.servlet.Request;
@@ -20,6 +22,8 @@ import blade.servlet.Response;
 @Interceptor
 public class BaseInterceptor {
 
+	private static Logger LOGGER = Logger.getLogger(BaseInterceptor.class);
+	
 	@Inject
 	private SettingService settingService;
 	
@@ -58,8 +62,10 @@ public class BaseInterceptor {
 	public void after(){
 		System.out.println("after...");
 		monitor.end();
-		monitor.render();
-		monitor.renderAvg();
+		BigDecimal b = new BigDecimal(monitor.avg().doubleValue());
+		double avg = b.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
+		
+		LOGGER.debug("执行了(" + monitor.size() + ")次，本次：" + monitor.current() + " ms，平均：" + avg + " ms");
 	}
 	
 }
