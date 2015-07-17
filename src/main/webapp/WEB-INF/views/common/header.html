@@ -23,7 +23,7 @@ for(css_href in cssList!){%>
 <!--[if lt IE 10]>
 	<script src='${cdn}/assets/js/jq/placeholder.min.js' type='text/javascript'></script>
 <![endif]-->
-<script type="text/javascript" src="${cdn}/assets/js/jq/jquery-2.0.min.js?v=${static_v}"></script>
+<script type="text/javascript" src="http://ajax.useso.com/ajax/libs/jquery/1.7.1/jquery.min.js?v=${static_v}"></script>
 </head>
 <body class="container">
 <header>
@@ -46,6 +46,9 @@ for(css_href in cssList!){%>
 			</li>
 			<li <%if('music' == active!){%>class="active"<%}%>>
 				<a href="${base}/music"><i class="icon-music"></i>　音乐在线</a>
+			</li>
+			<li <%if('random' == active!){%>class="active"<%}%>>
+				<a href="${base}/random"><i class="icon-music"></i>　随便听听</a>
 			</li>
 			<li <%if('special' == active!){%>class="active"<%}%>>
 				<a href="${base}/special"><i class="icon-headphones"></i>　电台之声</a>

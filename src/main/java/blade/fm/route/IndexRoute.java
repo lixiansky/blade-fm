@@ -29,17 +29,12 @@ public class IndexRoute extends BaseRoute {
 		return "index";
 	}
 	
-	@Route("/index")
-	public String home(Request request) {
-		return index(request);
-	}
-
 	@Route("up")
 	public String up(){
 		return "up";
 	}
 	
-	@Route(value = "/login")
+	@Route(value = "login")
 	public ModelAndView loginPage(Request request, Response response){
 		ModelAndView modelAndView = new ModelAndView("login");
 		return modelAndView;
@@ -48,7 +43,7 @@ public class IndexRoute extends BaseRoute {
 	/**
 	 * 用户登录
 	 */
-	@Route(value = "/login")
+	@Route(value = "login")
 	public String login(Request request, Response response){
 		
 		String step = request.query("step");
@@ -76,6 +71,12 @@ public class IndexRoute extends BaseRoute {
 			}
 		}
 		return "login";
+	}
+	
+	@Route(value = "random")
+	public ModelAndView random(){
+		ModelAndView modelAndView = new ModelAndView("random");
+		return modelAndView;
 	}
 }
 

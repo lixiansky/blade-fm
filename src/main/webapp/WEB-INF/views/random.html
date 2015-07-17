@@ -1,0 +1,114 @@
+<% include("/common/header.html", {active:'random', title:'音乐视听-找回你放松的感觉!', cssList : ['random.css']}){} %>
+<div id="background"></div>
+	<div id="player">
+		<div class="cover"></div>
+		<div class="ctrl">
+			<div class="tag">
+				<strong>Title</strong>
+				<span class="artist">Artist</span>
+				<span class="album">Album</span>
+			</div>
+			<div class="control">
+				<div class="left">
+					<div class="rewind icon"></div>
+					<div class="playback icon"></div>
+					<div class="fastforward icon"></div>
+				</div>
+				<div class="volume right">
+					<div class="mute icon left"></div>
+					<div class="slider left">
+						<div class="pace"></div>
+					</div>
+				</div>
+			</div>
+			<div class="musicprogress">
+				<div class="slider">
+					<div class="loaded"></div>
+					<div class="pace"></div>
+				</div>
+				<div class="timer left">0:00</div>
+				<div class="right">
+					<div class="repeat icon"></div>
+					<div class="shuffle icon"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<ul id="playlist"></ul>
+
+	<div class="wrapper">
+		<div class="border-circle" id="one"></div>
+		<div class="border-circle" id="two"></div>
+		<div class="background-circle">
+			<div class="triangle-light"></div>
+			<div class="body"></div>
+			<span class="shirt-text">I</span>
+			<span class="shirt-text">♥</span>
+			<span class="shirt-text">M</span>
+			<span class="shirt-text">U</span>
+			<span class="shirt-text">S</span>
+			<span class="shirt-text">I</span>
+			<span class="shirt-text">C</span>
+			<div class="triangle-dark"></div>
+		</div>
+		<div class="head">
+			<div class="ear" id="left"></div>
+			<div class="ear" id="right"></div>
+			<div class="hair-main">
+				<div class="sideburn" id="left"></div>
+				<div class="sideburn" id="right"></div>
+				<div class="hair-top"></div>
+			</div>
+			<div class="face">
+				<div class="hair-bottom"></div>
+				<div class="nose"></div>
+				<div class="eye-shadow" id="left">
+					<div class="eyebrow"></div>
+					<div class="eye"></div>
+				</div>
+				<div class="eye-shadow" id="right">
+					<div class="eyebrow"></div>
+					<div class="eye"></div>
+				</div>
+				<div class="mouth"></div>
+				<div class="shadow-wrapper">
+					<div class="shadow"></div>
+				</div>
+			</div>
+		</div>
+		<span class="music-note" id="one">&#9835;</span>
+		<span class="music-note" id="two">&#9834;</span>
+
+		<footer>
+		岁月缥缈如画，尘世纷繁复杂。<br />
+		人们常说自己听懂了音乐，听懂了歌词，<br />
+		倒不如说是我们的朋友——音乐听懂我们内心的诉说。<br />
+		渐渐地我们习惯了一个人的音乐，<br />
+		一个人的音乐是心灵最深处地倾诉。<br />
+		我们每个人都或多或少地希望<br />
+		自己听的音乐能把周围和未来打动。<br />
+		可是没想到最终却只打动了自己。<br /><br />
+		Copyright &copy; 2014 <a href="http://shaffer.sinaapp.com">Shaffer John</a>
+		</footer>
+
+	</div>
+
+<script type="text/javascript" src="${cdn}/assets/js/jscroll.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+ $("#playlist").jscroll({
+   W:"10px"
+  ,BgUrl:"url(assets/images/s_bg2.gif)"
+  ,Bg:"right 0 repeat-y"
+  ,Bar:{Bd:{Out:"#a3c3d5",Hover:"#b7d5e6"}
+		,Bg:{Out:"-45px 0",Hover:"-45px 0",Focus:"-45px 0"}}
+		,Btn:{btn:true
+			  ,uBg:{Out:"0 0",Hover:"0px 0",Focus:"0px 0"}
+			  ,dBg:{Out:"0 -8px",Hover:"0px -8px",Focus:"0px -8px"}}
+  ,Fn:function(){}
+ });
+});
+</script>
+<script src="http://aceace.qiniudn.com/fm/js/jquery-ui-1.8.17.custom.min.js"></script>
+<% include("/common/footer.html", {jsList:['random.js']}){} %>
