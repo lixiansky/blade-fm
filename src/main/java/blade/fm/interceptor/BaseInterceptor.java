@@ -32,7 +32,6 @@ public class BaseInterceptor {
 	@Before("/*")
 	public void before(Request request, Response response){
 		
-		System.out.println("before...");
 		monitor.start();
 		
 		String assets = request.contextPath() + "/assets";
@@ -60,7 +59,6 @@ public class BaseInterceptor {
 	
 	@After("/*")
 	public void after(){
-		System.out.println("after...");
 		monitor.end();
 		BigDecimal b = new BigDecimal(monitor.avg().doubleValue());
 		double avg = b.setScale(3, BigDecimal.ROUND_HALF_UP).doubleValue();
