@@ -5,8 +5,8 @@
 	<artifactId>blade-fm</artifactId>
 	<packaging>war</packaging>
 	<version>0.0.1</version>
-	<name>fm-cloud Maven Webapp</name>
-	<url>http://maven.apache.org</url>
+	<name>blade框架开发的音乐电台系统</name>
+	<url>https://github.com/bladejava/blade-fm</url>
 
 	<properties>
 		<maven.compiler.source>1.6</maven.compiler.source>
