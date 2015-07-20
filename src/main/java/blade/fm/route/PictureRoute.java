@@ -55,7 +55,6 @@ public class PictureRoute extends BaseRoute {
 		Integer id = request.pathParamToInt("id");
 		if(null != id){
 			Map<String, Object> pictrue = pictureService.getMap(null, id);
-			System.out.println(pictrue);
 			modelAndView.add("pictrue", pictrue);
 		}
 		return modelAndView;
