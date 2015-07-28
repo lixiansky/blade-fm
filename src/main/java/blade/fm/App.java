@@ -1,11 +1,7 @@
 package blade.fm;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import blade.Blade;
 import blade.BladeApplication;
-import blade.kit.PropertyKit;
 import blade.kit.log.Logger;
 import blade.plugin.sql2o.Sql2oPlugin;
 import blade.render.BeetlRender;
@@ -31,27 +27,16 @@ public class App extends BladeApplication {
 		// 设置静态目录
 		Blade.staticFolder("/assets/", "/userfiles/");
 		
+		Blade.config("blade.properties");
+		
 		// 设置模板引擎
 		BeetlRender beetlRender = new BeetlRender();
 		
 		Blade.viewEngin(beetlRender);
 		
 		// 配置数据库插件
-		Sql2oPlugin sql2oPlugin = Sql2oPlugin.INSTANCE;
-		sql2oPlugin.config(bladeConf.get("BLADE.DBURL"), bladeConf.get("BLADE.DBDRIVER"), bladeConf.get("BLADE.DBUSER"), bladeConf.get("BLADE.DBPASS"));
-		sql2oPlugin.openCache();
-		sql2oPlugin.run();
+		Sql2oPlugin.INSTANCE.autoConfig().run();
 		
-	}
-	
-	static Map<String, String> bladeConf = new HashMap<String, String>();
-	
-	static{
-		bladeConf = PropertyKit.getPropertyMap("blade.properties");
-	}
-	
-	public static void main(String[] args) {
-		Blade.run(App.class, 9000);
 	}
 	
 }

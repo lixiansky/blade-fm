@@ -2,6 +2,7 @@ package blade.fm;
 
 import java.io.File;
 
+import blade.Blade;
 import blade.kit.log.Logger;
 
 import com.alibaba.fastjson.JSON;
@@ -21,12 +22,12 @@ import com.qiniu.util.StringMap;
  */
 public class QiniuApi {
 	
-	private static String ACCESSKEY = App.bladeConf.get("QINIU.ACCESSKEY");
-	private static String SECRETKEY = App.bladeConf.get("QINIU.SECRETKEY");
+	private static String ACCESSKEY = Blade.config().get("QINIU.ACCESSKEY");
+	private static String SECRETKEY = Blade.config().get("QINIU.SECRETKEY");
 	
 	private final static Auth auth = Auth.create(ACCESSKEY, SECRETKEY);
 	
-	private final static String BUCKET_NAME = App.bladeConf.get("QINIU.BUCKET_NAME");
+	private final static String BUCKET_NAME = Blade.config().get("QINIU.BUCKET_NAME");
 	
 	private final static Logger log = Logger.getLogger(QiniuApi.class);
 	
@@ -52,7 +53,7 @@ public class QiniuApi {
 	}
 	
 	public static String getUrlByKey(String key){
-		return App.bladeConf.get("QINIU.CDN_PREFIX") + "/" + key; 
+		return Blade.config().get("QINIU.CDN_PREFIX") + "/" + key; 
 	}
 	
 	public static String delete(String key){
