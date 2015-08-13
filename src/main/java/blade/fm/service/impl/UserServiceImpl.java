@@ -17,12 +17,13 @@ import blade.fm.util.EncrypUtil;
 import blade.kit.CollectionKit;
 import blade.kit.DateKit;
 import blade.kit.StringKit;
+import blade.plugin.sql2o.Model;
 import blade.plugin.sql2o.Page;
 
 @Component
 public class UserServiceImpl implements UserService {
 
-	private User model = new User();
+	private Model<User> model = new Model<User>(User.class);
 	
 	@Inject
 	private ActiveService activeService;

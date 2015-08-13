@@ -7,11 +7,12 @@ import org.apache.commons.lang3.StringUtils;
 import blade.annotation.Component;
 import blade.fm.model.Mcat;
 import blade.fm.service.McatService;
+import blade.plugin.sql2o.Model;
 
 @Component
 public class McatServiceImpl implements McatService {
 
-	private Mcat model = new Mcat();
+	private Model<Mcat> model = new Model<Mcat>(Mcat.class);
 	
 	@Override
 	public Mcat get(Integer id) {

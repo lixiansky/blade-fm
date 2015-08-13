@@ -9,11 +9,12 @@ import blade.annotation.Component;
 import blade.fm.model.Setting;
 import blade.fm.service.SettingService;
 import blade.kit.CollectionKit;
+import blade.plugin.sql2o.Model;
 
 @Component
 public class SettingServiceImpl implements SettingService {
 	
-	private Setting model = new Setting();
+	private Model<Setting> model = new Model<Setting>(Setting.class);
 	
 	@Override
 	public Setting get(String key) {

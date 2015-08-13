@@ -12,7 +12,6 @@
 		<maven.compiler.source>1.6</maven.compiler.source>
 		<maven.compiler.target>1.6</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<jetty.version>9.0.2.v20130417</jetty.version>
 	</properties>
 
 	<dependencies>
@@ -26,13 +25,13 @@
 		<dependency>
 			<groupId>com.bladejava</groupId>
 			<artifactId>blade-core</artifactId>
-			<version>1.2.5-beta</version>
+			<version>1.2.6</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.bladejava</groupId>
 			<artifactId>blade-sql2o</artifactId>
-			<version>1.2.5</version>
+			<version>1.2.6-alpha</version>
 		</dependency>
 		<dependency>
 			<groupId>com.bladejava</groupId>

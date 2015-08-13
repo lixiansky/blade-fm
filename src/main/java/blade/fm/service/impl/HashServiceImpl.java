@@ -8,11 +8,12 @@ import blade.annotation.Component;
 import blade.fm.model.Hash;
 import blade.fm.service.HashService;
 import blade.kit.DateKit;
+import blade.plugin.sql2o.Model;
 
 @Component
 public class HashServiceImpl implements HashService {
 	
-	private Hash model = new Hash();
+	private Model<Hash> model = new Model<Hash>(Hash.class);
 	
 	@Override
 	public Hash get(Integer id, String hash) {

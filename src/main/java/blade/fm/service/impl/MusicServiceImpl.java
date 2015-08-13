@@ -31,7 +31,7 @@ public class MusicServiceImpl implements MusicService {
 
 	private Logger logger = Logger.getLogger(MusicServiceImpl.class);
 
-	private Music model = new Music();
+	private Model<Music> model = new Model<Music>(Music.class);
 	
 	@Inject
 	private FileService fileService;
@@ -174,7 +174,7 @@ public class MusicServiceImpl implements MusicService {
 			Music music = this.get(id);
 			if (null != music) {
 				
-				Model updateModel = model.update();
+				Model<Music> updateModel = model.update();
 				
 				//判断是否修改歌名
 				if (StringUtils.isNotBlank(song) && !song.equals(music.getSong())) {
@@ -235,7 +235,7 @@ public class MusicServiceImpl implements MusicService {
 				}
 				
 				try {
-					count = updateModel.where("id", music.getId()).executeAndCommit(Integer.class);
+					count = updateModel.where("id", music.getId()).executeAndCommit();
 				} catch (Exception e) {
 					logger.warn("更新音乐失败：" + e.getMessage());
 					count = 0;

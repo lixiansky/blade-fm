@@ -9,7 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import blade.Blade;
 import blade.annotation.Component;
 import blade.annotation.Inject;
-import blade.fm.Constant;
 import blade.fm.QiniuApi;
 import blade.fm.model.Focus;
 import blade.fm.service.FileService;
@@ -19,13 +18,15 @@ import blade.kit.CollectionKit;
 import blade.kit.DateKit;
 import blade.kit.FileKit;
 import blade.kit.log.Logger;
+import blade.plugin.sql2o.Model;
 import blade.plugin.sql2o.Page;
 
 @Component
 public class FocusServiceImpl implements FocusService {
 
 	private Logger logger = Logger.getLogger(FocusServiceImpl.class);
-	private Focus model = new Focus();
+	private Model<Focus> model = new Model<Focus>(Focus.class);
+	
 	@Inject
 	private FileService fileService;
 	

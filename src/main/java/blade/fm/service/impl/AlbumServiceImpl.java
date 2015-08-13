@@ -15,6 +15,7 @@ import blade.kit.CollectionKit;
 import blade.kit.DateKit;
 import blade.kit.FileKit;
 import blade.kit.log.Logger;
+import blade.plugin.sql2o.Model;
 import blade.plugin.sql2o.Page;
 
 import com.alibaba.fastjson.JSON;
@@ -24,7 +25,7 @@ public class AlbumServiceImpl implements AlbumService {
 
 	private Logger logger = Logger.getLogger(AlbumServiceImpl.class);
 	
-	private Album model = new Album();
+	private Model<Album> model = new Model<Album>(Album.class);
 	
 	@Override
 	public Album get(Integer id) {

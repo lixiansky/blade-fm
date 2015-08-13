@@ -1,6 +1,7 @@
 package blade.fm.model;
 
-import blade.plugin.sql2o.Model;
+import java.io.Serializable;
+
 import blade.plugin.sql2o.Table;
 
 /**
@@ -10,7 +11,7 @@ import blade.plugin.sql2o.Table;
  * @version:1.0
  */
 @Table(value="t_mcat")
-public class Mcat extends Model {
+public class Mcat implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	private Integer id;

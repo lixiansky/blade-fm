@@ -36,7 +36,7 @@ public class RadioServiceImpl implements RadioService {
 	@Inject
 	private UserService userService;
 
-	private Radio model = new Radio();
+	private Model<Radio> model = new Model<Radio>(Radio.class);
 	
 	@Override
 	public Radio get(Integer id) {
@@ -121,7 +121,7 @@ public class RadioServiceImpl implements RadioService {
 			Radio radio = this.get(id);
 			String url_key = "";
 			
-			Model updateModel = model.update();
+			Model<Radio> updateModel = model.update();
 			
 			//判断音乐文件是否修改
 			if (StringUtils.isNotBlank(url)) {

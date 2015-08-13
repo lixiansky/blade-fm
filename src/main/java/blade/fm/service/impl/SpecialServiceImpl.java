@@ -9,7 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import blade.Blade;
 import blade.annotation.Component;
 import blade.annotation.Inject;
-import blade.fm.Constant;
 import blade.fm.QiniuApi;
 import blade.fm.model.Special;
 import blade.fm.model.User;
@@ -40,7 +39,7 @@ public class SpecialServiceImpl implements SpecialService {
 	@Inject
 	private UserService userService;
 
-	private Special model = new Special();
+	private Model<Special> model = new Model<Special>(Special.class);
 	
 	@Override
 	public Special get(Integer sid) {
@@ -129,7 +128,7 @@ public class SpecialServiceImpl implements SpecialService {
 			Special special = this.get(sid);
 			if (null != special) {
 				
-				Model updateModel = model.update();
+				Model<Special> updateModel = model.update();
 				
 				if (StringUtils.isNotBlank(title) && !title.equals(special.getTitle())) {
 					updateModel.param("title", title);

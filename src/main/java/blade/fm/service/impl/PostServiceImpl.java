@@ -8,6 +8,7 @@ import blade.fm.model.Post;
 import blade.fm.service.PostService;
 import blade.kit.DateKit;
 import blade.kit.log.Logger;
+import blade.plugin.sql2o.Model;
 import blade.plugin.sql2o.Page;
 
 @Component
@@ -15,7 +16,7 @@ public class PostServiceImpl implements PostService {
 
 	private Logger logger = Logger.getLogger(PostServiceImpl.class);
 	
-	private Post model = new Post();
+	private Model<Post> model = new Model<Post>(Post.class);
 	
 	@Override
 	public Post getByPid(Integer pid) {

@@ -9,13 +9,14 @@ import blade.fm.util.Base64;
 import blade.annotation.Component;
 import blade.annotation.Inject;
 import blade.kit.log.Logger;
+import blade.plugin.sql2o.Model;
 
 @Component
 public class ActiveServiceImpl implements ActiveService {
 
 	private Logger logger = Logger.getLogger(ActiveServiceImpl.class);
 	
-	private Active model = new Active();
+	private Model<Active> model = new Model<Active>(Active.class);
 	
 	@Inject
 	private UserService userService;
