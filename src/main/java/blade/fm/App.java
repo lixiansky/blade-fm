@@ -13,20 +13,6 @@ public class App extends BladeApplication {
 	@Override
 	public void init() {
 		
-		// 设置路由、拦截器包所在包
-		Blade.routes("blade.fm.route.*");
-		
-		Blade.interceptor("blade.fm.interceptor");
-		
-		// 设置要扫描的ioc包，可选
-		Blade.ioc("blade.fm.service.*");
-		
-		// 设置视图位置和默认后缀名称
-		Blade.view("/WEB-INF/views/", ".html");
-		
-		// 设置静态目录
-		Blade.staticFolder("/assets/", "/userfiles/");
-		
 		Blade.config("blade.properties");
 		
 		// 设置模板引擎

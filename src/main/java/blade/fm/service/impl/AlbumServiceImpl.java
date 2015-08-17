@@ -46,6 +46,7 @@ public class AlbumServiceImpl implements AlbumService {
 			resultMap.put("status", picture.getStatus());
 			
 			if(StringUtils.isNotBlank(picture.getPics())){
+				@SuppressWarnings("unchecked")
 				List<Map<String, Object>> pics = JSON.parseObject(picture.getPics(), List.class);
 				resultMap.put("pics", pics);
 			}
@@ -107,6 +108,7 @@ public class AlbumServiceImpl implements AlbumService {
 		int count = 0, upCount = 0;
 		uid = (null == uid) ? 1 : uid;
 		if(StringUtils.isNotBlank(pics)){
+			@SuppressWarnings("unchecked")
 			List<Map<String, Object>> picList = JSON.parseObject(pics, List.class);
 			for(int i=0,len=picList.size(); i<len; i++){
 				Map<String, Object> map = picList.get(i);
@@ -166,12 +168,12 @@ public class AlbumServiceImpl implements AlbumService {
 	public boolean update(Integer id, String title, String introduce, String cover, String pics, Integer status) {
 		if(null != id){
 			Album pic = this.get(id);
-			int upCount = 0;
 			if(null != pic){
 				String coverStr = null;
 				String picJson = null;
 				if(StringUtils.isNotBlank(pics)){
 					
+					@SuppressWarnings("unchecked")
 					List<Map<String, Object>> picList = JSON.parseObject(pics, List.class);
 					List<Map<String, Object>> newList = CollectionKit.newArrayList();
 					for(int i=0,len=picList.size(); i<len; i++){
@@ -181,7 +183,6 @@ public class AlbumServiceImpl implements AlbumService {
 							if(key.startsWith("upload/images/") && null != map.get("isold")){
 								map.put("key", key);
 								map.put("url", QiniuApi.getUrlByKey(key));
-								upCount++;
 								newList.add(map);
 							} else{
 								String filePath = Blade.webRoot() + "/" + key;
@@ -190,7 +191,6 @@ public class AlbumServiceImpl implements AlbumService {
 //									fileService.upload(key, filePath);
 									map.put("key", key);
 									map.put("url", QiniuApi.getUrlByKey(key));
-									upCount++;
 									newList.add(map);
 								}
 							}

@@ -39,7 +39,7 @@ public class MusicServiceImpl implements MusicService {
 	private UserService userService;
 	@Inject
 	private McatService mcatService;
-
+	
 	@Override
 	public Music get(Integer mid) {
 		return model.select().fetchByPk(mid);

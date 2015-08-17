@@ -12,8 +12,6 @@ import blade.kit.log.Logger;
 @Component
 public class FileServiceImpl implements FileService {
 
-	private Logger logger = Logger.getLogger(FileServiceImpl.class);
-	
 	@Override
 	public void delete(final String key) {
 		new Thread() {

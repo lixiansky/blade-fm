@@ -29,6 +29,7 @@ public class MusicRoute extends BaseRoute {
 	
 	@Route("/")
 	public ModelAndView home(Request request, Response response){
+		System.out.println(musicService);
 		ModelAndView modelAndView = new ModelAndView("music");
 		String singer = request.query("singer");
 		String song = request.query("song");
