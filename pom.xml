@@ -25,18 +25,18 @@
 		<dependency>
 			<groupId>com.bladejava</groupId>
 			<artifactId>blade-core</artifactId>
-			<version>1.2.7-alpha</version>
+			<version>1.2.9-beta</version>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>com.bladejava</groupId>
 			<artifactId>blade-sql2o</artifactId>
-			<version>1.2.6-alpha</version>
+			<version>1.2.8</version>
 		</dependency>
 		<dependency>
 			<groupId>com.bladejava</groupId>
 			<artifactId>blade-cache</artifactId>
-			<version>1.2.2</version>
+			<version>1.2.3</version>
 		</dependency>
 		
 		<dependency>

@@ -3,18 +3,17 @@ package blade.fm.route.admin;
 import java.io.File;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
+
 import blade.Blade;
 import blade.annotation.Inject;
 import blade.annotation.Path;
 import blade.annotation.Route;
-import blade.cache.CacheManager;
 import blade.fm.Constant;
 import blade.fm.route.BaseRoute;
 import blade.fm.service.SettingService;
 import blade.servlet.Request;
 import blade.servlet.Response;
-
-import com.alibaba.fastjson.JSONObject;
 
 /**
  * 系统后台设置
@@ -71,12 +70,6 @@ public class SysRoute extends BaseRoute {
 	@Route("/admin/sys/cleanCache")
 	public void cleanCache(Request request, Response response) {
 		
-		CacheManager cm = CacheManager.getInstance();
-		cm.removeAll();
-		
-		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("status", true);
-		response.json(jsonObject.toJSONString());
 	}
 	
 	/**
